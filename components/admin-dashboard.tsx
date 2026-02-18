@@ -67,6 +67,7 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
       description: startup.description,
       website: startup.website || "",
       logo_url: startup.logo_url || "",
+      // Handles both array and string formats for founders
       founders: Array.isArray(startup.founders) 
         ? startup.founders.join(", ") 
         : startup.founders || "",
@@ -94,6 +95,7 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
     setIsSubmitting(true)
     const supabase = createClient()
 
+    // payload keys match columns in official schema (founded_year, logo_url, etc)
     const payload = {
       name: form.name,
       slug: form.slug || generateSlug(form.name),
@@ -121,7 +123,7 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
       setForm(emptyForm)
       setEditingId(null)
       
-      // Trigger a refresh to update the table and the home screen cache
+      // Forces Next.js to re-fetch data for all components
       router.refresh() 
     } catch (error: any) {
       alert("Error saving to database: " + error.message)
@@ -332,7 +334,9 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
                         <div>
                           <p className="text-sm font-medium">{startup.name}</p>
                           <p className="text-xs text-muted-foreground">
-                            {Array.isArray(startup.founders) ? startup.founders[0] : startup.founders?.split(",")[0]}
+                            {Array.isArray(startup.founders) 
+                              ? startup.founders[0] 
+                              : startup.founders?.split(",")[0]}
                           </p>
                         </div>
                       </div>
