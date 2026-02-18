@@ -54,7 +54,10 @@ export function StartupDetail({ startup }: StartupDetailProps) {
                 )}
                 <div className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                   <Users className="h-3.5 w-3.5" />
-                  {startup.founders}
+                  {Array.isArray(startup.founders)
+                  ? startup.founders.join(", ")
+                  : startup.founders || "Founders not listed"}
+
                 </div>
               </div>
             </div>
