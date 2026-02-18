@@ -21,7 +21,7 @@ interface StartupForm {
   slug: string
   description: string
   website: string
-  logo_url: string // Added for Logo URL support
+  logo_url: string
   founders: string
   founded_year: string
   category: string
@@ -33,7 +33,7 @@ const emptyForm: StartupForm = {
   slug: "",
   description: "",
   website: "",
-  logo_url: "", // Initialized empty
+  logo_url: "",
   founders: "",
   founded_year: "",
   category: "",
@@ -66,7 +66,7 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
       slug: startup.slug,
       description: startup.description,
       website: startup.website || "",
-      logo_url: startup.logo_url || "", // Load existing logo URL
+      logo_url: startup.logo_url || "",
       founders: Array.isArray(startup.founders) 
         ? startup.founders.join(", ") 
         : startup.founders || "",
@@ -81,6 +81,7 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
     if (!confirm("Are you sure you want to delete this startup?")) return
     const supabase = createClient()
     const { error } = await supabase.from("startups").delete().eq("id", id)
+    
     if (error) {
       alert("Error deleting record: " + error.message)
     } else {
@@ -98,7 +99,7 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
       slug: form.slug || generateSlug(form.name),
       description: form.description,
       website: form.website || null,
-      logo_url: form.logo_url || null, // Include Logo URL in database payload
+      logo_url: form.logo_url || null,
       founders: form.founders,
       founded_year: form.founded_year ? parseInt(form.founded_year) : null,
       category: form.category,
@@ -119,7 +120,9 @@ export function AdminDashboard({ startups, userEmail }: AdminDashboardProps) {
       setShowForm(false)
       setForm(emptyForm)
       setEditingId(null)
-      router.refresh()
+      
+      // Trigger a refresh to update the table and the home screen cache
+      router.refresh() 
     } catch (error: any) {
       alert("Error saving to database: " + error.message)
     } finally {
