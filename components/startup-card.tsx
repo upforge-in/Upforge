@@ -1,66 +1,102 @@
 "use client"
 
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/badge"
-import { Badge } from "@/components/ui/badge"
-import { Award, Calendar, Users } from "lucide-react"
+import Link from "next/link"
+import { Award, ArrowUpRight } from "lucide-react"
 import type { Startup } from "@/types/startup"
-import Link from "next/link" // Import Link
 
 interface StartupCardProps {
   startup: Startup
+  featured?: boolean
 }
 
-export function StartupCard({ startup }: StartupCardProps) {
+export function StartupCard({ startup, featured = false }: StartupCardProps) {
+  // Defensive helper to extract the first founder safely
+  const getDisplayFounder = () => {
+    if (!startup.founders) return { name: "View details", hasMore: false }
+    
+    if (typeof startup.founders === 'string') {
+      const parts = startup.founders.split(",")
+      return {
+        name: parts[0],
+        hasMore: parts.length > 1
+      }
+    }
+    
+    if (Array.isArray(startup.founders)) {
+      return {
+        name: startup.founders[0],
+        hasMore: startup.founders.length > 1
+      }
+    }
+
+    return { name: "View details", hasMore: false }
+  }
+
+  const founderInfo = getDisplayFounder()
+
   return (
-    // Wrap entire card in Link using the dynamic slug
-    <Link href={`/startup/${startup.slug}`} className="block transition-transform hover:scale-[1.02]">
-      <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <div className="p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              {/* Display Logo URL if available */}
-              {startup.logo_url ? (
-                <img 
-                  src={startup.logo_url} 
-                  alt={`${startup.name} logo`} 
-                  className="h-12 w-12 rounded-lg object-contain bg-muted p-1"
-                />
-              ) : (
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold">
-                  {startup.name[0]}
-                </div>
-              )}
-              <div>
-                <h3 className="font-bold text-foreground leading-tight">{startup.name}</h3>
-                <p className="text-xs text-muted-foreground">{startup.category}</p>
-              </div>
+    // Ensure the slug exists; fallback to an empty string if it doesn't
+    <Link href={`/startup/${startup.slug || ""}`} className="group block">
+      <article
+        className={`relative flex h-full flex-col rounded-lg border bg-card p-6 transition-all duration-200 hover:shadow-md ${
+          featured
+            ? "border-primary/20 shadow-sm"
+            : "border-border hover:border-primary/10"
+        }`}
+      >
+        {startup.is_featured && (
+          <div className="absolute right-4 top-4">
+            <div className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1">
+              <Award className="h-3 w-3 text-primary" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+                Featured
+              </span>
             </div>
-            {startup.is_featured && (
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-none">
-                <Award className="mr-1 h-3 w-3" />
-                Top
-              </Badge>
-            )}
           </div>
-          
-          <p className="mt-4 text-sm text-muted-foreground line-clamp-2">
-            {startup.description}
-          </p>
+        )}
+
+        {/* Display Startup Logo if it exists, otherwise show the first letter */}
+        <div className="mb-4 flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-secondary border border-border">
+          {startup.logo_url ? (
+            <img 
+              src={startup.logo_url} 
+              alt={`${startup.name} logo`} 
+              className="h-full w-full object-contain"
+            />
+          ) : (
+            <span className="text-lg font-bold text-secondary-foreground">
+              {startup.name?.charAt(0) || "?"}
+            </span>
+          )}
         </div>
 
-        <div className="mt-auto border-t border-border bg-muted/30 p-4">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <Users className="h-3.5 w-3.5" />
-              <span>{Array.isArray(startup.founders) ? startup.founders[0] : startup.founders?.split(',')[0]}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5" />
-              <span>{startup.founded_year || 'N/A'}</span>
-            </div>
-          </div>
+        <h3 className="text-lg font-semibold text-card-foreground group-hover:text-primary">
+          {startup.name}
+        </h3>
+
+        <div className="mt-1 flex items-center gap-2">
+          <span className="inline-flex rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground">
+            {startup.category}
+          </span>
+          {startup.founded_year && (
+            <span className="text-xs text-muted-foreground">
+              Est. {startup.founded_year}
+            </span>
+          )}
         </div>
-      </div>
+
+        <p className="mt-3 line-clamp-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+          {startup.description}
+        </p>
+
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+          <p className="text-xs text-muted-foreground">
+            {founderInfo.name}
+            {founderInfo.hasMore && " & others"}
+          </p>
+          <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+        </div>
+      </article>
     </Link>
   )
 }
