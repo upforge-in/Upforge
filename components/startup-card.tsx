@@ -55,8 +55,9 @@ export function StartupCard({ startup, featured = false }: StartupCardProps) {
 
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
           <p className="text-xs text-muted-foreground">
-            {startup.founders.split(",")[0]}
-            {startup.founders.includes(",") && " & others"}
+            {/* Added optional chaining and fallback for safety */}
+            {startup.founders?.split(",")[0] || "Founders not listed"}
+            {startup.founders?.includes(",") && " & others"}
           </p>
           <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
         </div>
