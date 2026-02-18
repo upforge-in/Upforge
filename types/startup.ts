@@ -5,7 +5,7 @@ export interface Startup {
   description: string
   logo_url: string | null
   website: string | null
-  founders: string
+  founders: string | string[] | null
   founded_year: number | null
   category: string
   is_featured: boolean
