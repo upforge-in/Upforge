@@ -8,6 +8,32 @@ interface StartupCardProps {
 }
 
 export function StartupCard({ startup, featured = false }: StartupCardProps) {
+  // Defensive helper to extract the first founder safely
+  const getDisplayFounder = () => {
+    if (!startup.founders) return "Founders not listed"
+    
+    // If it's already a string, split it
+    if (typeof startup.founders === 'string') {
+      const parts = startup.founders.split(",")
+      return {
+        name: parts[0],
+        hasMore: parts.length > 1
+      }
+    }
+    
+    // If Supabase returned it as an array [ "Founder 1", "Founder 2" ]
+    if (Array.isArray(startup.founders)) {
+      return {
+        name: startup.founders[0],
+        hasMore: startup.founders.length > 1
+      }
+    }
+
+    return { name: "View details", hasMore: false }
+  }
+
+  const founderInfo = getDisplayFounder()
+
   return (
     <Link href={`/startup/${startup.slug}`} className="group block">
       <article
@@ -30,7 +56,7 @@ export function StartupCard({ startup, featured = false }: StartupCardProps) {
 
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-secondary">
           <span className="text-lg font-bold text-secondary-foreground">
-            {startup.name.charAt(0)}
+            {startup.name?.charAt(0) || "?"}
           </span>
         </div>
 
@@ -55,9 +81,8 @@ export function StartupCard({ startup, featured = false }: StartupCardProps) {
 
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
           <p className="text-xs text-muted-foreground">
-            {/* Added optional chaining and fallback for safety */}
-            {startup.founders?.split(",")[0] || "Founders not listed"}
-            {startup.founders?.includes(",") && " & others"}
+            {typeof founderInfo === 'string' ? founderInfo : founderInfo.name}
+            {typeof founderInfo !== 'string' && founderInfo.hasMore && " & others"}
           </p>
           <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
         </div>
