@@ -26,92 +26,79 @@ export function StartupCard({ startup, featured = false }: StartupCardProps) {
   const founderInfo = getDisplayFounder()
 
   return (
-    <Link href={`/startup/${startup.slug || ""}`} className="group block">
-      <article
-        className={`relative flex h-full flex-col rounded-2xl border transition-all duration-300 ${
-          featured
-            ? "border-primary/30 bg-gradient-to-br from-primary/5 via-card to-background p-7 shadow-lg shadow-primary/5 hover:border-primary/60 hover:shadow-primary/10"
-            : "border-border bg-card p-6 hover:border-primary/20 hover:shadow-md"
-        }`}
-      >
-        {/* Premium Badge for Featured Startups */}
-        {featured && (
-          <div className="absolute -top-3 left-6">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 shadow-lg shadow-primary/20">
-              <Sparkles className="h-3 w-3 text-primary-foreground" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary-foreground">
-                Elite Member
-              </span>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.4 }}
+    >
+      <Link href={`/startup/${startup.slug || ""}`} className="group block h-full">
+        <article
+          className={`relative flex h-full flex-col rounded-2xl border transition-all duration-300 ${
+            featured
+              ? "border-primary/30 bg-gradient-to-br from-primary/5 via-card to-background p-7 shadow-lg shadow-primary/5 hover:border-primary/60"
+              : "border-border bg-card p-6 hover:border-primary/20 hover:shadow-md"
+          }`}
+        >
+          {featured && (
+            <div className="absolute -top-3 left-6">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 shadow-lg shadow-primary/20">
+                <Sparkles className="h-3 w-3 text-primary-foreground" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary-foreground">
+                  Elite Member
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div className="mb-5 flex items-start justify-between">
+            <div className={`flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border ${
+              featured ? "border-primary/20 bg-white" : "border-border bg-secondary"
+            }`}>
+              {startup.logo_url ? (
+                <img src={startup.logo_url} alt="logo" className="h-full w-full object-contain p-2" />
+              ) : (
+                <span className={`text-xl font-black ${featured ? "text-primary" : "text-secondary-foreground"}`}>
+                  {startup.name?.charAt(0) || "?"}
+                </span>
+              )}
             </div>
           </div>
-        )}
 
-        {/* Logo Section with special ring for featured */}
-        <div className="mb-5 flex items-start justify-between">
-          <div className={`flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border ${
-            featured ? "border-primary/20 bg-white shadow-inner" : "border-border bg-secondary"
-          }`}>
-            {startup.logo_url ? (
-              <img 
-                src={startup.logo_url} 
-                alt={`${startup.name} logo`} 
-                className="h-full w-full object-contain p-2"
-              />
-            ) : (
-              <span className={`text-xl font-black ${featured ? "text-primary" : "text-secondary-foreground"}`}>
-                {startup.name?.charAt(0) || "?"}
-              </span>
-            )}
-          </div>
-          
-          {featured && (
-             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary opacity-0 transition-all group-hover:opacity-100">
-                <ArrowUpRight className="h-5 w-5" />
-             </div>
-          )}
-        </div>
+          <h3 className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+            {startup.name}
+          </h3>
 
-        <h3 className={`text-xl font-bold tracking-tight ${featured ? "text-foreground group-hover:text-primary" : "text-card-foreground"}`}>
-          {startup.name}
-        </h3>
-
-        <div className="mt-2 flex items-center gap-2">
-          <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-            featured ? "bg-primary/10 text-primary" : "bg-secondary text-secondary-foreground"
-          }`}>
-            {startup.category}
-          </span>
-          {startup.founded_year && (
-            <span className="text-xs font-medium text-muted-foreground/60">
-              • Est. {startup.founded_year}
+          <div className="mt-2 flex items-center gap-2">
+            <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+              featured ? "bg-primary/10 text-primary" : "bg-secondary text-secondary-foreground"
+            }`}>
+              {startup.category}
             </span>
-          )}
-        </div>
-
-        <p className={`mt-4 line-clamp-3 flex-1 text-sm leading-relaxed ${
-          featured ? "text-muted-foreground/90 font-medium" : "text-muted-foreground"
-        }`}>
-          {startup.description}
-        </p>
-
-        <div className={`mt-6 flex items-center justify-between border-t pt-4 ${
-          featured ? "border-primary/10" : "border-border"
-        }`}>
-          <div className="flex items-center gap-2">
-            <div className={`h-1.5 w-1.5 rounded-full ${featured ? "bg-primary animate-pulse" : "bg-muted-foreground/30"}`} />
-            <p className="text-xs font-semibold text-muted-foreground">
-              {founderInfo.name}
-              {founderInfo.hasMore && " + Team"}
-            </p>
           </div>
-          {!featured && <ArrowUpRight className="h-4 w-4 text-muted-foreground" />}
-        </div>
 
-        {/* Bottom glowing line for Featured only */}
-        {featured && (
-          <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-gradient-to-r from-transparent via-primary to-transparent transition-transform duration-500 group-hover:scale-x-100" />
-        )}
-      </article>
-    </Link>
+          <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-muted-foreground/90">
+            {startup.description}
+          </p>
+
+          {/* Institutional Branding Seal */}
+          <div className="mt-4 flex items-center justify-start opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+            <img src="/seal.jpg" alt="Official Seal" className="h-10 w-auto object-contain" />
+            <div className="ml-2 h-[1px] flex-1 bg-gradient-to-r from-border to-transparent" />
+          </div>
+
+          <div className={`mt-6 flex items-center justify-between border-t pt-4 ${
+            featured ? "border-primary/10" : "border-border"
+          }`}>
+            <div className="flex items-center gap-2">
+              <div className={`h-1.5 w-1.5 rounded-full ${featured ? "bg-primary animate-pulse" : "bg-muted-foreground/30"}`} />
+              <p className="text-xs font-semibold text-muted-foreground">{founderInfo.name}</p>
+            </div>
+            <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </div>
+        </article>
+      </Link>
+    </motion.div>
   )
 }
