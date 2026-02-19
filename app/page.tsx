@@ -96,7 +96,7 @@ export default async function Home() {
         </div>
 
         <div className="mt-20 text-center">
-          <Link href="/startups">
+          <Link href="/startup">
             <Button className="group relative h-16 px-12 rounded-2xl bg-slate-900 text-white hover:bg-indigo-600 transition-all duration-300 shadow-2xl shadow-slate-200 overflow-hidden">
               <span className="relative z-10 flex items-center gap-2 text-sm font-black uppercase tracking-widest">
                 Explore All Startups
@@ -113,7 +113,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-3 text-slate-600 font-bold">
             <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            <span>New startups verified weekly</span>
+            <span>New startups verified Daily</span>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
             <span className="font-mono text-sm font-black tracking-tighter text-slate-900">SEQUOIA</span>
