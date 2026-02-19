@@ -9,7 +9,6 @@ import {
   Download,
   CheckCircle2,
   ExternalLink,
-  ShieldCheck,
   Globe,
   MapPin,
   Calendar,
@@ -62,8 +61,8 @@ export function StartupDetail({ startup }: { startup: Startup }) {
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
-            title: `UpForge Recognition`,
-            text: `${startup.name} is officially recognized by UpForge.`,
+            title: `Featured on UpForge`,
+            text: `${startup.name} has been featured by UpForge.`,
           })
         } else {
           saveAs(blob, `${startup.name}-UpForge.png`)
@@ -81,13 +80,12 @@ export function StartupDetail({ startup }: { startup: Startup }) {
   return (
     <div className="min-h-screen bg-white text-slate-900">
 
-      {/* ================= HIDDEN PREMIUM POSTER ================= */}
+      {/* ================= HIDDEN DOWNLOAD POSTER ================= */}
       <div className="fixed left-[-9999px] top-0">
         <div
           ref={posterRef}
           className="w-[1080px] h-[1080px] bg-white p-20 flex flex-col justify-between text-slate-900"
         >
-
           {/* Header */}
           <div className="flex items-center justify-between border-b pb-6">
             <div className="flex items-center gap-3">
@@ -102,37 +100,55 @@ export function StartupDetail({ startup }: { startup: Startup }) {
 
             <img
               src="/seal.jpg"
-              alt="Official Seal"
+              alt="Seal"
               className="h-16 w-16 object-contain"
             />
           </div>
 
           {/* Center */}
-          <div className="text-center space-y-6">
-            <h1 className="text-4xl font-semibold tracking-tight">
+          <div className="text-center space-y-8">
+
+            <div className="h-32 w-32 mx-auto rounded-xl border flex items-center justify-center bg-white">
+              {startup.logo_url ? (
+                <img
+                  src={startup.logo_url}
+                  className="object-contain h-full w-full p-4"
+                  alt={startup.name}
+                />
+              ) : (
+                <span className="text-3xl font-semibold">
+                  {startup.name?.[0]}
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-3xl font-semibold tracking-tight">
               {startup.name}
             </h1>
 
             <p className="text-base text-slate-600 max-w-xl mx-auto">
-              Officially recognized as a verified member of the UpForge Network.
+              Recognized as a Promising Startup within the UpForge Institutional Network.
+            </p>
+
+            <p className="text-sm text-slate-500 italic">
+              This recognition reflects the leadership vision and innovation commitment behind {startup.name}.
             </p>
           </div>
 
           {/* Footer */}
-          <div className="border-t pt-6 flex justify-between text-sm text-slate-500">
+          <div className="border-t pt-6 text-sm text-slate-500 flex justify-between items-center">
+            <span>Featured on www.upforge.in</span>
             <span>Verification ID: UPF-{startup.id}</span>
-            <span>www.upforge.in</span>
           </div>
         </div>
       </div>
 
       {/* ================= NAVBAR ================= */}
       <nav className="border-b bg-white sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             href="/startup"
-            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
+            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900"
           >
             <ArrowLeft className="h-4 w-4" />
             Startup Directory
@@ -161,30 +177,31 @@ export function StartupDetail({ startup }: { startup: Startup }) {
         </div>
       </nav>
 
-      {/* ================= MAIN ================= */}
+      {/* ================= MAIN PAGE ================= */}
       <main className="max-w-6xl mx-auto px-6 py-16">
-
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="grid lg:grid-cols-12 gap-12"
         >
 
-          {/* LEFT */}
+          {/* LEFT SIDE */}
           <div className="lg:col-span-8 space-y-8">
 
-            {/* Header Branding */}
-            <div className="flex items-center gap-3">
-              <div className="relative h-10 w-10 rounded-lg overflow-hidden">
-                <Image src="/logo.jpg" alt="Logo" fill className="object-cover" />
-              </div>
-              <span className="text-2xl font-black tracking-tighter">
-                <span className="text-foreground">UP</span>
-                <span className="text-muted-foreground/50">FORGE</span>
-              </span>
+            <div className="h-24 w-24 rounded-xl border bg-white flex items-center justify-center">
+              {startup.logo_url ? (
+                <img
+                  src={startup.logo_url}
+                  className="object-contain h-full w-full p-4"
+                  alt={startup.name}
+                />
+              ) : (
+                <span className="text-2xl font-semibold">
+                  {startup.name?.[0]}
+                </span>
+              )}
             </div>
 
-            {/* Startup Identity */}
             <div>
               <h1 className="text-3xl font-semibold tracking-tight">
                 {startup.name}
@@ -196,12 +213,10 @@ export function StartupDetail({ startup }: { startup: Startup }) {
               </p>
             </div>
 
-            {/* Description */}
             <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
               {startup.description}
             </p>
 
-            {/* Website */}
             {websiteUrl && (
               <a
                 href={websiteUrl}
@@ -216,7 +231,7 @@ export function StartupDetail({ startup }: { startup: Startup }) {
             )}
           </div>
 
-          {/* RIGHT PANEL */}
+          {/* RIGHT SIDE */}
           <div className="lg:col-span-4">
             <div className="border rounded-xl p-6 space-y-6 bg-white">
 
