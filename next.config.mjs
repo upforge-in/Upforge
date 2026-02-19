@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Turbopack is now stable/default in many environments; 
-  // we remove the invalid 'turbo' key from experimental.
+  // Invalid 'turbo' key removed from experimental to fix build warnings
   
-  // High-performance image handling for startup logos
   images: {
     remotePatterns: [
       {
@@ -14,12 +12,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**', // General fallback for external founder icons
+        hostname: '**', // Fallback for external founder icons
       }
     ],
   },
 
-  // Security headers for high-trust data
   async headers() {
     return [
       {
