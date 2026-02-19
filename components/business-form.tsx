@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useRef, useState, useEffect } from 'react'
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import emailjs from '@emailjs/browser'
 import { Button } from "@/components/ui/button"
 import {
@@ -14,30 +14,33 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { CheckCircle2, Loader2, ShieldCheck, Plus, Lock, ArrowUpRight } from "lucide-react"
+import { CheckCircle2, Loader2, ShieldCheck, Plus, Lock, ArrowUpRight, Globe } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
   const form = useRef<HTMLFormElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(0);
 
-  // Two premium states that match the website vibe
+  const isHomePage = pathname === "/";
   const states = [
     { label: "Connect", color: "bg-white text-black", icon: <Plus className="h-5 w-5" /> },
     { label: "Grow", color: "bg-primary text-primary-foreground", icon: <ArrowUpRight className="h-5 w-5" /> }
   ];
 
   useEffect(() => {
-    // 5-second delay between state changes for a premium, non-spammy feel
+    // Only cycle steps if we are on the homepage and the dialog is closed
+    if (!isHomePage || isOpen) return;
+
     const interval = setInterval(() => {
       setStep((prev) => (prev + 1) % states.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isHomePage, isOpen]);
 
   const sendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,12 +67,13 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
         {isMobile ? (
           <motion.button
             animate={{ 
-              width: [52, 130, 130, 52], // Expansion animation
+              // Only expand if on homepage AND form is closed
+              width: (isHomePage && !isOpen) ? [52, 130, 130, 52] : 52,
             }}
             transition={{ 
               duration: 4, 
               repeat: Infinity, 
-              repeatDelay: 1, // Adds that extra pause before re-animating
+              repeatDelay: 2,
               ease: "easeInOut" 
             }}
             className={`relative flex h-12 items-center justify-start overflow-hidden rounded-full px-4 shadow-2xl transition-colors duration-700 ${states[step].color}`}
@@ -77,13 +81,18 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
             <div className="flex shrink-0 items-center justify-center">
               {states[step].icon}
             </div>
-            <motion.span 
-              animate={{ opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 4, repeat: Infinity, repeatDelay: 1 }}
-              className="ml-3 text-sm font-bold uppercase tracking-widest"
-            >
-              {states[step].label}
-            </motion.span>
+            <AnimatePresence>
+              {(isHomePage && !isOpen) && (
+                <motion.span 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 1, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, repeatDelay: 2 }}
+                  className="ml-3 text-sm font-bold uppercase tracking-widest"
+                >
+                  {states[step].label}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </motion.button>
         ) : (
           <Button className="group h-12 gap-2 rounded-full px-8 font-black shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
@@ -93,7 +102,6 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
       </DialogTrigger>
       
       <DialogContent className="sm:max-w-[480px] overflow-hidden border-white/5 bg-background/95 backdrop-blur-3xl p-0 shadow-2xl">
-        {/* Trust Header */}
         <div className="h-1.5 w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
         
         <AnimatePresence mode="wait">
@@ -118,13 +126,20 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
 
               <form ref={form} onSubmit={sendEmail} className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <Input name="from_name" placeholder="Name" className="h-14 bg-white/5 border-white/10 focus:bg-white/10" required />
-                  <Input name="business_name" placeholder="Startup" className="h-14 bg-white/5 border-white/10 focus:bg-white/10" required />
+                  <Input name="from_name" placeholder="Name" className="h-14 bg-white/5 border-white/10" required />
+                  <Input name="business_name" placeholder="Startup" className="h-14 bg-white/5 border-white/10" required />
                 </div>
-                <Input name="reply_to" type="email" placeholder="Work Email" className="h-14 bg-white/5 border-white/10 focus:bg-white/10" required />
-                <Textarea name="message" placeholder="Elevator Pitch..." className="min-h-[100px] bg-white/5 border-white/10 focus:bg-white/10" required />
+                <Input name="reply_to" type="email" placeholder="Work Email" className="h-14 bg-white/5 border-white/10" required />
                 
-                <Button type="submit" disabled={isLoading} className="mt-2 h-16 rounded-xl text-lg font-black transition-all hover:shadow-primary/25 shadow-lg">
+                {/* Added Website Field */}
+                <div className="relative">
+                  <Input name="website" type="url" placeholder="Venture Website (https://...)" className="h-14 bg-white/5 border-white/10 pl-10" required />
+                  <Globe className="absolute left-3 top-4.5 h-4 w-4 text-muted-foreground/50" />
+                </div>
+
+                <Textarea name="message" placeholder="Elevator Pitch..." className="min-h-[100px] bg-white/5 border-white/10" required />
+                
+                <Button type="submit" disabled={isLoading} className="mt-2 h-16 rounded-xl text-lg font-black shadow-lg">
                   {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : "Verify Identity"}
                 </Button>
                 
