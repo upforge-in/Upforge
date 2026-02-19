@@ -15,25 +15,20 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-[100] w-full border-b border-white/10 bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-        {/* Brand/Logo */}
-        <Link href="/" className="flex items-center gap-3 group transition-transform active:scale-95">
-          <div className="relative h-9 w-9 overflow-hidden rounded-xl border border-primary/20 bg-white shadow-inner">
-            <Image src="/logo.jpg" alt="Logo" fill className="object-cover transition-transform group-hover:scale-110" />
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative h-9 w-9 overflow-hidden rounded-xl border border-primary/20 bg-white">
+            <Image src="/logo.jpg" alt="Logo" fill className="object-cover" />
           </div>
           <span className="text-2xl font-black tracking-tighter">
             <span className="text-foreground">UP</span>
-            <span className="bg-gradient-to-r from-muted-foreground/60 to-muted-foreground/30 bg-clip-text text-transparent">FORGE</span>
+            <span className="text-muted-foreground/50">FORGE</span>
           </span>
         </Link>
 
-        {/* Desktop Navigation - Same Sections */}
+        {/* Desktop - Same as before */}
         <div className="hidden md:flex md:items-center md:gap-10">
           {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              href={link.href} 
-              className="text-sm font-semibold text-muted-foreground transition-all hover:text-primary"
-            >
+            <Link key={link.name} href={link.href} className="text-sm font-semibold text-muted-foreground hover:text-primary">
               {link.name}
             </Link>
           ))}
@@ -41,7 +36,7 @@ export function Navbar() {
           <BusinessForm />
         </div>
 
-        {/* Mobile View - Hamburger Removed, Only Connect Icon remains */}
+        {/* Mobile - Removed Hamburger, Added Animated Connect */}
         <div className="flex md:hidden items-center">
           <BusinessForm isMobile={true} />
         </div>
