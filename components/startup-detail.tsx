@@ -13,14 +13,13 @@ export function StartupDetail({ startup }: { startup: Startup }) {
   const posterRef = useRef<HTMLDivElement>(null)
   const [isGenerating, setIsGenerating] = useState(false)
 
-  // 1. Website Link Fix: Ensuring absolute URLs
-  const getCleanUrl = (url: string | undefined) => {
-    if (!url) return "#"
-    const trimmedUrl = url.trim()
-    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
-      return trimmedUrl
-    }
-    return `https://${trimmedUrl}`
+  // Website Fix: Direct function to handle external navigation
+  const handleVisitWebsite = () => {
+    if (!startup.website_url) return;
+    const url = startup.website_url.startsWith('http') 
+      ? startup.website_url 
+      : `https://${startup.website_url}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   const handleAction = async (type: 'share' | 'download') => {
@@ -29,20 +28,20 @@ export function StartupDetail({ startup }: { startup: Startup }) {
     try {
       const blob = await toBlob(posterRef.current, { 
         cacheBust: true,
-        backgroundColor: '#0f172a', // Dark premium background for poster
-        pixelRatio: 3 // Ultra-high resolution
+        backgroundColor: '#0f172a',
+        pixelRatio: 2
       })
       if (!blob) return
       
       if (type === 'download') {
-        saveAs(blob, `${startup.name}-Recognition.png`)
+        saveAs(blob, `${startup.name}-Certificate.png`)
       } else {
         const file = new File([blob], `${startup.name}-Featured.png`, { type: 'image/png' })
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({ 
             files: [file], 
-            title: `Featured: ${startup.name}`, 
-            text: `We are excited to share that ${startup.name} is now officially featured on UpForge!` 
+            title: startup.name, 
+            text: `Check out ${startup.name} on UpForge!` 
           })
         } else {
           saveAs(blob, `${startup.name}-Featured.png`)
@@ -58,164 +57,125 @@ export function StartupDetail({ startup }: { startup: Startup }) {
   return (
     <div className="min-h-screen bg-[#FDFDFD] text-slate-900">
       
-      {/* --- PREMIUM POSTER TEMPLATE (Social Media Ready) --- */}
+      {/* --- HIDDEN POSTER TEMPLATE (1:1 Ratio for Social Media) --- */}
       <div className="fixed left-[-9999px] top-0">
-        <div 
-          ref={posterRef} 
-          className="w-[1000px] h-[1000px] bg-[#0f172a] p-20 flex flex-col justify-between relative overflow-hidden text-white font-sans"
-        >
-          {/* Decorative Gradients for Premium Feel */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px]" />
-          
+        <div ref={posterRef} className="w-[800px] h-[800px] bg-[#0f172a] p-12 flex flex-col justify-between relative text-white">
           <div className="z-10 flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="bg-white p-2 rounded-lg">
-                <img src="/logo.jpg" className="h-10 w-10 object-contain" alt="UpForge" />
-              </div>
-              <span className="text-2xl font-black tracking-tighter uppercase">UpForge</span>
+            <div className="flex items-center gap-2">
+              <img src="/logo.jpg" className="h-8 w-8 rounded" alt="UpForge" />
+              <span className="text-xl font-bold tracking-tighter uppercase">UpForge</span>
             </div>
-            <div className="px-5 py-2 border border-white/20 bg-white/5 backdrop-blur-md rounded-full text-xs font-bold tracking-[0.2em] text-blue-400">
-              OFFICIAL FEATURE
+            <div className="px-4 py-1 border border-blue-500/30 bg-blue-500/10 rounded-full text-[10px] font-bold tracking-widest text-blue-400">
+              OFFICIAL LISTING
             </div>
           </div>
 
-          <div className="z-10 text-center space-y-8">
-             <div className="relative inline-block">
-                <div className="h-40 w-40 mx-auto rounded-[2.5rem] bg-white p-4 shadow-2xl flex items-center justify-center overflow-hidden border-4 border-white/10">
-                  {startup.logo_url ? (
-                    <img src={startup.logo_url} className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="text-6xl font-black text-slate-900">{startup.name?.[0]}</span>
-                  )}
-                </div>
-                <div className="absolute -bottom-4 -right-4 bg-blue-600 p-3 rounded-full border-4 border-[#0f172a]">
-                  <Award className="h-6 w-6 text-white" />
-                </div>
-             </div>
-
-             <div className="space-y-4">
-               <h1 className="text-7xl font-black tracking-tighter uppercase leading-none italic">
-                 {startup.name}
-               </h1>
-               <div className="h-1 w-24 bg-blue-600 mx-auto rounded-full" />
-               <p className="text-2xl text-slate-400 font-medium max-w-2xl mx-auto line-clamp-2">
-                 {startup.description}
-               </p>
-             </div>
+          <div className="z-10 text-center space-y-6">
+            <div className="h-32 w-32 mx-auto rounded-3xl bg-white p-4 shadow-2xl flex items-center justify-center overflow-hidden">
+              {startup.logo_url ? <img src={startup.logo_url} className="w-full h-full object-contain" /> : <span className="text-4xl font-black text-slate-900">{startup.name?.[0]}</span>}
+            </div>
+            <div className="space-y-2">
+              <h1 className="text-5xl font-black tracking-tight uppercase">{startup.name}</h1>
+              <p className="text-lg text-slate-400 max-w-md mx-auto line-clamp-2">{startup.description}</p>
+            </div>
           </div>
 
-          <div className="z-10 grid grid-cols-3 gap-8 border-t border-white/10 pt-12 items-end">
+          <div className="z-10 grid grid-cols-2 gap-4 border-t border-white/10 pt-8 items-center">
             <div>
-              <p className="text-[10px] font-black uppercase text-blue-500 tracking-widest mb-1">Category</p>
-              <p className="text-xl font-bold">{startup.category || 'Startup'}</p>
-            </div>
-            <div className="flex justify-center">
-               <img src="/seal.jpg" className="h-32 w-auto opacity-90 brightness-110" alt="Verified Seal" />
+              <p className="text-[10px] font-black uppercase text-blue-500 tracking-widest">Category</p>
+              <p className="text-lg font-bold">{startup.category || 'Startup'}</p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-black uppercase text-blue-500 tracking-widest mb-1">Status</p>
-              <p className="text-xl font-bold italic underline decoration-blue-500">Verified Member</p>
+              <p className="text-[10px] font-black uppercase text-blue-500 tracking-widest">Status</p>
+              <p className="text-lg font-bold">Verified Member</p>
             </div>
-          </div>
-          
-          <div className="absolute bottom-6 left-0 right-0 text-center">
-            <p className="text-[10px] font-bold text-white/30 tracking-[0.5em] uppercase">Verified at www.upforge.in</p>
           </div>
         </div>
       </div>
 
-      {/* --- NAVIGATION --- */}
+      {/* --- UI NAVIGATION --- */}
       <nav className="border-b border-slate-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-          <Link href="/#startups" className="flex items-center gap-2 text-[10px] font-black tracking-widest text-slate-400 hover:text-primary transition-all">
-            <ArrowLeft className="h-4 w-4" /> BACK TO LIST
+        <div className="mx-auto max-w-7xl px-4 h-14 flex items-center justify-between">
+          <Link href="/#startups" className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-slate-400 hover:text-blue-600 transition-all">
+            <ArrowLeft className="h-3 w-3" /> BACK
           </Link>
-          <div className="flex gap-3">
-            <Button variant="outline" size="sm" onClick={() => handleAction('download')} disabled={isGenerating} className="rounded-full text-[10px] font-black tracking-widest">
-              <Download className="mr-2 h-3.5 w-3.5" /> {isGenerating ? "GENERATING..." : "DOWNLOAD POSTER"}
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" onClick={() => handleAction('download')} disabled={isGenerating} className="text-[10px] font-bold h-8 px-3">
+              <Download className="mr-1.5 h-3 w-3" /> {isGenerating ? "..." : "POSTER"}
             </Button>
-            <Button size="sm" onClick={() => handleAction('share')} disabled={isGenerating} className="rounded-full px-6 text-[10px] font-black tracking-widest bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100">
-              <Share2 className="mr-2 h-3.5 w-3.5" /> {isGenerating ? "..." : "SHARE"}
+            <Button size="sm" onClick={() => handleAction('share')} disabled={isGenerating} className="h-8 px-4 text-[10px] font-bold bg-blue-600 hover:bg-blue-700">
+              <Share2 className="mr-1.5 h-3 w-3" /> SHARE
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* --- CONTENT --- */}
-      <main className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      {/* --- MAIN CONTENT (Organized & Compact) --- */}
+      <main className="mx-auto max-w-5xl px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
-          {/* Left Side: Main Info */}
-          <div className="lg:col-span-8 space-y-10">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="h-24 w-24 rounded-[2rem] bg-white border border-slate-100 flex items-center justify-center overflow-hidden mb-8 shadow-xl shadow-slate-100">
-                  {startup.logo_url ? <img src={startup.logo_url} className="h-full w-full object-contain p-4" alt={startup.name} /> : <span className="text-4xl font-black text-blue-600">{startup.name?.[0]}</span>}
+          <div className="lg:col-span-7 space-y-6">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="h-16 w-16 rounded-2xl bg-white border border-slate-100 flex items-center justify-center overflow-hidden mb-6 shadow-sm">
+                {startup.logo_url ? <img src={startup.logo_url} className="h-full w-full object-contain p-3" alt={startup.name} /> : <span className="text-2xl font-black text-blue-600">{startup.name?.[0]}</span>}
               </div>
               
-              <div className="flex items-center gap-2 text-blue-600 mb-6 bg-blue-50 w-fit px-4 py-1.5 rounded-full">
+              <div className="flex items-center gap-2 text-blue-600 mb-4">
                 <CheckCircle2 className="h-4 w-4" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Verified Institutional Listing</span>
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em]">Verified Institutional Listing</span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-slate-900 uppercase leading-[0.85] mb-8">
+              {/* Fixed Heading Sizes: Reduced from 8xl to 4xl/5xl */}
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase leading-none mb-6">
                 {startup.name}
               </h1>
 
-              <p className="text-xl md:text-2xl text-slate-500 leading-relaxed font-medium max-w-3xl mb-12">
+              <p className="text-base md:text-lg text-slate-500 leading-relaxed font-medium mb-8">
                 {startup.description}
               </p>
 
               <div className="flex flex-wrap gap-4">
-                <a 
-                  href={getCleanUrl(startup.website_url)} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 px-10 py-4 bg-slate-900 text-white rounded-2xl text-xs font-black tracking-[0.2em] hover:bg-blue-600 transition-all shadow-2xl shadow-slate-200 group"
+                <Button 
+                  onClick={handleVisitWebsite}
+                  className="rounded-xl px-8 py-6 bg-slate-900 hover:bg-blue-600 text-xs font-bold tracking-widest gap-2 shadow-lg shadow-slate-200"
                 >
-                  VISIT OFFICIAL WEBSITE <ExternalLink className="h-4 w-4 opacity-50 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </a>
+                  VISIT WEBSITE <ExternalLink className="h-3.5 w-3.5 opacity-50" />
+                </Button>
               </div>
             </motion.div>
 
-            {/* Verification Footer */}
-            <div className="pt-20 mt-20 border-t border-slate-100 flex flex-wrap items-center gap-10">
-                <img src="/seal.jpg" alt="Seal" className="h-36 w-auto grayscale hover:grayscale-0 transition-all" />
-                <div className="space-y-2">
-                    <p className="text-[11px] font-black uppercase tracking-[0.5em] text-slate-300">Digital Authentication</p>
-                    <p className="text-sm font-bold text-slate-500 uppercase leading-relaxed">
-                      UpForge Network Verified Member<br/>
-                      <span className="text-blue-600">Reference: UPF-{startup.id?.toString().substring(0,8).toUpperCase() || '2026'}</span>
-                    </p>
+            <div className="pt-12 mt-12 border-t border-slate-100 flex items-center gap-6">
+                <img src="/seal.jpg" alt="Seal" className="h-20 w-auto opacity-50" />
+                <div className="space-y-1">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-300">Authentication Reference</p>
+                    <p className="text-[11px] font-bold text-slate-500 uppercase">UpForge Network Member • 2026-VET</p>
                 </div>
             </div>
           </div>
 
-          {/* Right Side: Metadata Cards */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="bg-slate-50/50 border border-slate-100 p-10 rounded-[3rem] space-y-10">
-                <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400 border-b border-slate-200 pb-4">Startup Metadata</h3>
-                <div className="grid grid-cols-1 gap-8">
+          {/* Right Sidebar: Metadata */}
+          <div className="lg:col-span-5">
+            <div className="bg-slate-50/50 border border-slate-100 p-8 rounded-[2rem] space-y-6">
+                <h3 className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 border-b border-slate-200/50 pb-3">Information</h3>
+                <div className="grid grid-cols-2 gap-6">
                     {[
-                        { label: "Industry Sector", value: startup.category },
-                        { label: "Founded Year", value: startup.founded_year || '2026' },
-                        { label: "Network Status", value: "Verified Active" },
-                        { label: "Origin", value: "India" }
+                        { label: "Sector", value: startup.category },
+                        { label: "Batch", value: startup.founded_year || '2026' },
+                        { label: "Region", value: "India" },
+                        { label: "Status", value: "Active" }
                     ].map((item, i) => (
-                        <div key={i} className="group">
-                            <p className="text-[10px] font-black uppercase text-blue-600 tracking-widest mb-1.5">{item.label}</p>
-                            <p className="text-xl font-bold text-slate-800">{item.value}</p>
+                        <div key={i}>
+                            <p className="text-[9px] font-bold uppercase text-blue-600 tracking-tighter mb-1">{item.label}</p>
+                            <p className="text-sm font-bold text-slate-800">{item.value}</p>
                         </div>
                     ))}
                 </div>
             </div>
             
-            <div className="p-10 rounded-[3rem] border-2 border-dashed border-slate-100 flex flex-col items-center text-center gap-6 bg-white">
-                <div className="bg-slate-50 p-4 rounded-full">
-                  <ShieldCheck className="h-8 w-8 text-slate-400" />
-                </div>
-                <p className="text-[11px] font-bold text-slate-400 uppercase leading-loose tracking-wide">
-                  This profile is cryptographically secured & verified by the UpForge Institutional Board. Any unauthorized reproduction is prohibited.
+            <div className="mt-4 p-6 rounded-[2rem] border border-dashed border-slate-200 flex items-center gap-4 bg-white/50">
+                <ShieldCheck className="h-5 w-5 text-slate-300 flex-shrink-0" />
+                <p className="text-[9px] font-bold text-slate-400 uppercase leading-snug">
+                  Secured & verified profile via UpForge Board.
                 </p>
             </div>
           </div>
