@@ -16,19 +16,16 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        // Explicitly typing 'cookiesToSet' to resolve the 'any' type error
+        // This explicit type definition fixes the 'any' type error
         setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          // Update the request cookies
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
-          // Create a new response with the updated request headers
           response = NextResponse.next({
             request: {
               headers: request.headers,
             },
           })
-          // Set the cookies on the response so they reach the browser
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           )
@@ -37,18 +34,8 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // This part refreshes the session - IMPORTANT for working auth
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // OPTIONAL: Redirect logic
-  // If no user and trying to access protected route (e.g., /admin)
-  if (!user && request.nextUrl.pathname.startsWith('/admin') && request.nextUrl.pathname !== '/admin/login') {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/login'
-    return NextResponse.redirect(url)
-  }
+  // This call is necessary to trigger the session refresh logic
+  await supabase.auth.getUser()
 
   return response
 }
