@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Award, ArrowUpRight, Sparkles } from "lucide-react"
+import { ArrowUpRight, Sparkles, ShieldCheck } from "lucide-react"
 import type { Startup } from "@/types/startup"
 import { motion } from "framer-motion"
 
@@ -12,7 +12,7 @@ interface StartupCardProps {
 
 export function StartupCard({ startup, featured = false }: StartupCardProps) {
   const getDisplayFounder = () => {
-    if (!startup.founders) return { name: "View details", hasMore: false }
+    if (!startup.founders) return { name: "Institutional Lead", hasMore: false }
     if (typeof startup.founders === 'string') {
       const parts = startup.founders.split(",")
       return { name: parts[0], hasMore: parts.length > 1 }
@@ -26,91 +26,100 @@ export function StartupCard({ startup, featured = false }: StartupCardProps) {
   const founderInfo = getDisplayFounder()
 
   return (
-    <Link href={`/startup/${startup.slug || ""}`} className="group block">
+    <Link href={`/startup/${startup.slug || ""}`} className="group block h-full">
       <article
-        className={`relative flex h-full flex-col rounded-2xl border transition-all duration-300 ${
+        className={`relative flex h-full flex-col rounded-2xl border transition-all duration-500 bg-white ${
           featured
-            ? "border-primary/30 bg-gradient-to-br from-primary/5 via-card to-background p-7 shadow-lg shadow-primary/5 hover:border-primary/60 hover:shadow-primary/10"
-            : "border-border bg-card p-6 hover:border-primary/20 hover:shadow-md"
+            ? "border-slate-200 p-7 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-12px_rgba(0,0,0,0.12)] hover:-translate-y-1"
+            : "border-slate-100 p-6 hover:border-blue-200 shadow-sm hover:shadow-md"
         }`}
       >
-        {/* Premium Badge for Featured Startups */}
+        {/* Institutional Elite Badge */}
         {featured && (
           <div className="absolute -top-3 left-6">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 shadow-lg shadow-primary/20">
-              <Sparkles className="h-3 w-3 text-primary-foreground" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary-foreground">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-4 py-1 shadow-lg shadow-slate-200">
+              <Sparkles className="h-3 w-3 text-yellow-400" />
+              <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white">
                 Elite Member
               </span>
             </div>
           </div>
         )}
 
-        {/* Logo Section with special ring for featured */}
-        <div className="mb-5 flex items-start justify-between">
-          <div className={`flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border ${
-            featured ? "border-primary/20 bg-white shadow-inner" : "border-border bg-secondary"
+        {/* Logo Section - Clean, No Rings */}
+        <div className="mb-6 flex items-start justify-between">
+          <div className={`flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border bg-white transition-colors ${
+            featured ? "border-slate-100 shadow-sm" : "border-slate-50 shadow-none"
           }`}>
             {startup.logo_url ? (
               <img 
                 src={startup.logo_url} 
                 alt={`${startup.name} logo`} 
-                className="h-full w-full object-contain p-2"
+                className="h-full w-full object-contain p-3"
               />
             ) : (
-              <span className={`text-xl font-black ${featured ? "text-primary" : "text-secondary-foreground"}`}>
+              <span className="text-2xl font-black text-slate-900">
                 {startup.name?.charAt(0) || "?"}
               </span>
             )}
           </div>
           
-          {featured && (
-             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary opacity-0 transition-all group-hover:opacity-100">
-                <ArrowUpRight className="h-5 w-5" />
-             </div>
-          )}
-        </div>
-
-        <h3 className={`text-xl font-bold tracking-tight ${featured ? "text-foreground group-hover:text-primary" : "text-card-foreground"}`}>
-          {startup.name}
-        </h3>
-
-        <div className="mt-2 flex items-center gap-2">
-          <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-            featured ? "bg-primary/10 text-primary" : "bg-secondary text-secondary-foreground"
-          }`}>
-            {startup.category}
-          </span>
-          {startup.founded_year && (
-            <span className="text-xs font-medium text-muted-foreground/60">
-              • Est. {startup.founded_year}
-            </span>
-          )}
-        </div>
-
-        <p className={`mt-4 line-clamp-3 flex-1 text-sm leading-relaxed ${
-          featured ? "text-muted-foreground/90 font-medium" : "text-muted-foreground"
-        }`}>
-          {startup.description}
-        </p>
-
-        <div className={`mt-6 flex items-center justify-between border-t pt-4 ${
-          featured ? "border-primary/10" : "border-border"
-        }`}>
-          <div className="flex items-center gap-2">
-            <div className={`h-1.5 w-1.5 rounded-full ${featured ? "bg-primary animate-pulse" : "bg-muted-foreground/30"}`} />
-            <p className="text-xs font-semibold text-muted-foreground">
-              {founderInfo.name}
-              {founderInfo.hasMore && " + Team"}
-            </p>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-400 transition-all group-hover:bg-slate-900 group-hover:text-white group-hover:scale-110">
+            <ArrowUpRight className="h-4 w-4" />
           </div>
-          {!featured && <ArrowUpRight className="h-4 w-4 text-muted-foreground" />}
         </div>
 
-        {/* Bottom glowing line for Featured only */}
-        {featured && (
-          <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-gradient-to-r from-transparent via-primary to-transparent transition-transform duration-500 group-hover:scale-x-100" />
-        )}
+        <div className="space-y-3 flex-1">
+          <h3 className="text-2xl font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+            {startup.name}
+          </h3>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-slate-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-600">
+              {startup.category}
+            </span>
+            {startup.founded_year && (
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                • EST. {startup.founded_year}
+              </span>
+            )}
+          </div>
+
+          <p className="line-clamp-3 text-sm leading-relaxed font-medium text-slate-500">
+            {startup.description}
+          </p>
+        </div>
+
+        {/* Footer: Founder & Verification ID */}
+        <div className="mt-8 flex items-center justify-between border-t border-slate-50 pt-5">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400 border border-white">
+              {founderInfo.name.charAt(0)}
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">
+                Founder
+              </p>
+              <p className="text-xs font-bold text-slate-900">
+                {founderInfo.name}
+                {founderInfo.hasMore && <span className="text-blue-600 ml-1">+ Team</span>}
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-end">
+             <div className="flex items-center gap-1 text-green-600">
+               <ShieldCheck className="h-3 w-3" />
+               <span className="text-[9px] font-black uppercase tracking-tighter">Verified</span>
+             </div>
+             <p className="text-[9px] font-mono text-slate-300">
+               UPF-{startup.slug?.substring(0, 6).toUpperCase()}
+             </p>
+          </div>
+        </div>
+
+        {/* Clean underline animation for both types */}
+        <div className="absolute bottom-0 left-6 right-6 h-0.5 scale-x-0 bg-slate-900 transition-transform duration-500 group-hover:scale-x-100" />
       </article>
     </Link>
   )
