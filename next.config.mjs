@@ -1,13 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Turbopack optimization for premium transitions and Tailwind v4
-  experimental: {
-    turbo: {
-      rules: {
-        '*.css': ['postcss-loader'],
-      },
-    },
-  },
+  // Turbopack is now stable/default in many environments; 
+  // we remove the invalid 'turbo' key from experimental.
   
   // High-performance image handling for startup logos
   images: {
@@ -25,7 +19,7 @@ const nextConfig = {
     ],
   },
 
-  // Ensure high-trust data headers are present
+  // Security headers for high-trust data
   async headers() {
     return [
       {
