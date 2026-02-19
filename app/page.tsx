@@ -79,7 +79,7 @@ export default async function Home() {
           </div>
           
           <Link 
-            href="/startups" 
+            href="/startup" 
             className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-indigo-600 transition-all hover:gap-4"
           >
             View Full Directory
