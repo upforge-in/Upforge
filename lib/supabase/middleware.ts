@@ -16,16 +16,21 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        // Adding this exact type fixes the build error
+        // This specific type definition fixes the build error
         setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
+          // Sync cookies with the request
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
+          
+          // Create a new response to ensure headers are updated
           response = NextResponse.next({
             request: {
               headers: request.headers,
             },
           })
+          
+          // Sync cookies with the response to send back to the browser
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           )
@@ -34,7 +39,7 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // This ensures the session is checked and the setAll method above is triggered
+  // This is required to trigger session refreshing and use the setAll method
   await supabase.auth.getUser()
 
   return response
