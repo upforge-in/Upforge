@@ -2,100 +2,107 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowUpRight, ExternalLink, Sparkles } from "lucide-react"
-import type { Startup } from "@/types/startup"
+import Image from "next/image"
+import { ArrowUpRight, ShieldCheck, Sparkles, ExternalLink } from "lucide-react"
 import { motion } from "framer-motion"
+import type { Startup } from "@/types/startup"
 
-interface SponsoredCardProps {
+interface StartupCardProps {
   startup: Startup
 }
 
-export function SponsoredCard({ startup }: SponsoredCardProps) {
+export function StartupCard({ startup }: StartupCardProps) {
+  const isFeatured = startup.is_featured
+
   return (
     <motion.div
-      whileHover={{ y: -8, rotateX: 2, rotateY: 2 }}
+      whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="perspective-1000 h-full"
+      className="h-full"
     >
-      <Link href={`/startup/${startup.slug || ""}`} className="group relative block h-full">
-        {/* Animated Gradient Glow Border */}
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-[2rem] blur opacity-20 group-hover:opacity-50 transition duration-500 bg-[length:200%_auto] animate-gradient-x" />
-        
-        <article className="relative flex h-full flex-col rounded-[2rem] border border-white/40 bg-white/80 backdrop-blur-md p-8 shadow-2xl shadow-indigo-100/30">
-          {/* Header Section */}
-          <div className="flex items-start justify-between mb-8">
-            <div className="relative">
-              <div className="h-20 w-20 flex items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm p-4 transition-transform group-hover:scale-105 duration-500">
-                {startup.logo_url ? (
-                  <img 
-                    src={startup.logo_url} 
-                    alt={`${startup.name} logo`} 
-                    className="h-full w-full object-contain"
-                  />
-                ) : (
-                  <span className="text-3xl font-black text-slate-900">
-                    {startup.name?.charAt(0) || "?"}
-                  </span>
-                )}
-              </div>
-              {/* Sponsored Indicator Badge */}
-              <div className="absolute -top-2 -right-2 bg-amber-400 rounded-full p-1.5 shadow-lg border-2 border-white">
+      <Link 
+        href={`/startup/${startup.slug}`}
+        className="group relative flex flex-col h-full bg-white rounded-2xl border border-zinc-200 p-6 transition-all duration-300 hover:border-zinc-400 hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)]"
+      >
+        {/* DESIGN FOR FEATURED STARTUPS */}
+        {isFeatured && (
+          <>
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-indigo-500/20 rounded-2xl -z-10 blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute top-4 right-4">
+              <div className="bg-amber-400 rounded-full p-1.5 shadow-lg border-2 border-white">
                 <Sparkles className="h-3 w-3 text-white fill-current" />
               </div>
             </div>
-            
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 transition-all duration-300 group-hover:bg-indigo-600 group-hover:text-white group-hover:rotate-45">
-              <ArrowUpRight className="h-5 w-5" />
-            </div>
-          </div>
+          </>
+        )}
 
-          {/* Content Section */}
-          <div className="flex-1 space-y-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500">
-                  Featured Partner
-                </span>
-              </div>
-              <h3 className="text-2xl font-black tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
-                {startup.name}
-              </h3>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-indigo-600 border border-indigo-100">
-                {startup.category}
+        {/* LOGO & LINK ICON */}
+        <div className="flex justify-between items-start mb-6">
+          <div className="relative h-16 w-16 overflow-hidden rounded-xl border border-zinc-100 bg-white shadow-sm flex items-center justify-center p-2">
+            {startup.logo_url ? (
+              <Image
+                src={startup.logo_url}
+                alt={startup.name}
+                fill
+                className="object-contain p-2"
+              />
+            ) : (
+              <span className="text-2xl font-black text-zinc-300">
+                {startup.name?.charAt(0)}
               </span>
-              {startup.founded_year && (
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                  • EST. {startup.founded_year}
-                </span>
-              )}
-            </div>
-
-            <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 font-medium">
-              {startup.description}
-            </p>
+            )}
           </div>
+          <div className="h-9 w-9 rounded-full border border-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300 group-hover:rotate-45">
+            <ArrowUpRight className="w-4 h-4" />
+          </div>
+        </div>
 
-          {/* Action Footer */}
-          <div className="mt-8 pt-6 border-t border-slate-50">
-            <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
-              <span className="text-slate-400 group-hover:text-indigo-600 transition-colors">
-                View Profile
+        {/* CONTENT */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="text-xl font-bold tracking-tight text-zinc-900 group-hover:text-indigo-600 transition-colors">
+              {startup.name}
+            </h3>
+            {isFeatured && (
+              <ShieldCheck className="w-4 h-4 text-indigo-600" />
+            )}
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded ${
+              isFeatured 
+                ? "bg-indigo-50 text-indigo-600 border border-indigo-100" 
+                : "bg-zinc-100 text-zinc-600"
+            }`}>
+              {startup.category}
+            </span>
+            {startup.founded_year && (
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+                • {startup.founded_year}
               </span>
-              <div className="flex items-center gap-2 text-indigo-600">
-                <span className="hidden sm:inline">Visit Site</span>
-                <ExternalLink className="h-3 w-3" />
-              </div>
-            </div>
-            
-            {/* Animated Underline */}
-            <div className="mt-4 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-indigo-600 w-0 group-hover:w-full transition-all duration-700 ease-out" />
-            </div>
+            )}
           </div>
-        </article>
+
+          <p className="text-sm text-zinc-500 line-clamp-3 leading-relaxed font-medium">
+            {startup.description}
+          </p>
+        </div>
+
+        {/* FOOTER */}
+        <div className="mt-8 pt-6 border-t border-zinc-50 flex items-center justify-between">
+           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 group-hover:text-black transition-colors">
+            View Details
+          </span>
+          {isFeatured && (
+            <div className="flex items-center gap-1 text-indigo-600 text-[10px] font-bold uppercase tracking-wider">
+              <span>Verified</span>
+              <ExternalLink className="h-3 w-3" />
+            </div>
+          )}
+        </div>
+
+        {/* HOVER ANIMATION LINE */}
+        <div className="absolute bottom-0 left-0 h-1 bg-indigo-600 w-0 group-hover:w-full transition-all duration-500 rounded-b-2xl" />
       </Link>
     </motion.div>
   )
