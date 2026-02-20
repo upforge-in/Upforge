@@ -1,86 +1,68 @@
 import { createClient } from "@/lib/supabase/server"
-import { StartupCard } from "@/components/startup-card"
-import { WhyUpforge } from "@/components/why-upforge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowRight, Sparkles, Clock, Crown } from "lucide-react"
+import { ArrowRight, Crown, Sparkles } from "lucide-react"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "UpForge | India’s Independent Founder Network",
   description:
-    "UpForge is India’s premium founder registry. Discover verified startups, rising builders, and sponsored spotlight companies.",
-  keywords: [
-    "Indian startups",
-    "startup directory India",
-    "founder registry",
-    "startup listing platform",
-    "sponsored startup promotion",
-  ],
-  openGraph: {
-    title: "UpForge – India’s Independent Founder Network",
-    description:
-      "A curated public ledger of serious builders. Verified startups. Real founders.",
-    type: "website",
-  },
+    "Discover India’s rising startups. Sponsor your startup. Get visibility in the premium founder registry.",
 }
 
 export default async function Home() {
   const supabase = await createClient()
 
-  // Sponsored (Top Priority – Monetization Engine)
+  // Sponsor of the Week (Top 1 newest sponsored)
+  const { data: sponsorOfWeek } = await supabase
+    .from("startups")
+    .select("*")
+    .eq("is_sponsored", true)
+    .order("created_at", { ascending: false })
+    .limit(1)
+
+  // Top 10 Sponsored
   const { data: sponsored } = await supabase
     .from("startups")
     .select("*")
     .eq("is_sponsored", true)
-    .limit(6)
     .order("created_at", { ascending: false })
+    .limit(10)
 
-  // Featured (Editorial Picks)
+  // Top 10 Featured
   const { data: featured } = await supabase
     .from("startups")
     .select("*")
     .eq("is_featured", true)
-    .limit(6)
     .order("created_at", { ascending: false })
-
-  // Recent
-  const { data: recent } = await supabase
-    .from("startups")
-    .select("*")
-    .limit(6)
-    .order("created_at", { ascending: false })
+    .limit(10)
 
   return (
-    <div className="relative bg-[#FAFAF9] text-zinc-900 antialiased overflow-hidden">
-
-      {/* PREMIUM GRID BACKGROUND */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)] bg-[size:60px_60px] opacity-[0.25] pointer-events-none" />
+    <div className="bg-[#FAFAF9] text-zinc-900">
 
       {/* ================= HERO ================= */}
-      <section className="relative pt-44 pb-36 px-6 text-center">
-        <div className="max-w-5xl mx-auto">
-
-          <div className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-8">
+      <section className="pt-36 pb-28 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-xs tracking-[0.4em] uppercase text-zinc-500 mb-6">
             UPFORGE · VERIFIED FOUNDER REGISTRY
           </div>
 
-          <h1 className="text-6xl md:text-7xl font-light leading-[1.05] tracking-tight">
-            India’s Independent
+          <h1 className="text-5xl md:text-6xl font-light leading-tight">
+            Discover India’s
             <span className="block font-semibold">
-              Startup Directory.
+              Rising Startups.
             </span>
           </h1>
 
-          <p className="mt-10 text-lg text-zinc-600 max-w-2xl mx-auto leading-relaxed">
-            Discover serious founders. Sponsor visibility.  
-            Build reputation in the new digital economy.
+          <p className="mt-8 text-zinc-600 max-w-xl mx-auto">
+            A curated directory of serious founders.
+            Sponsor visibility. Build authority.
           </p>
 
-          <div className="mt-14 flex justify-center gap-5 flex-wrap">
+          <div className="mt-12 flex justify-center gap-4 flex-wrap">
             <Link href="/apply">
-              <Button className="h-12 px-10 rounded-full bg-black hover:bg-zinc-800 text-white text-xs uppercase tracking-[0.25em]">
-                List Your Startup
+              <Button className="rounded-full px-8 h-11 bg-black text-white text-xs uppercase tracking-widest">
+                List Startup
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -88,7 +70,7 @@ export default async function Home() {
             <Link href="/startup">
               <Button
                 variant="outline"
-                className="h-12 px-10 rounded-full border-zinc-300 text-zinc-700 hover:bg-zinc-100 text-xs uppercase tracking-[0.25em]"
+                className="rounded-full px-8 h-11 text-xs uppercase tracking-widest"
               >
                 Browse Directory
               </Button>
@@ -97,26 +79,58 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ================= SPONSORED SECTION ================= */}
-      {sponsored && sponsored.length > 0 && (
-        <section className="relative py-24 px-6 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 mb-12">
-            <Crown className="h-5 w-5 text-amber-500" />
-            <h2 className="text-xs tracking-[0.35em] uppercase font-semibold">
-              Sponsored Spotlight
+      {/* ================= SPONSOR OF THE WEEK ================= */}
+      {sponsorOfWeek && sponsorOfWeek.length > 0 && (
+        <section className="max-w-6xl mx-auto px-6 pb-24">
+          <div className="flex items-center gap-2 mb-8">
+            <Crown className="h-4 w-4 text-amber-500" />
+            <h2 className="text-xs uppercase tracking-[0.35em] font-semibold">
+              Sponsor of the Week
             </h2>
           </div>
 
-          {/* LOGO-FIRST GRID */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10">
+          <Link href={`/startup/${sponsorOfWeek[0].slug}`}>
+            <div className="bg-white border-2 border-amber-400 rounded-2xl p-8 flex items-center gap-6 hover:shadow-xl transition">
+              <img
+                src={sponsorOfWeek[0].logo_url}
+                className="h-16 w-16 object-contain"
+                alt=""
+              />
+              <div>
+                <h3 className="text-xl font-semibold">
+                  {sponsorOfWeek[0].name}
+                </h3>
+                <p className="text-sm text-zinc-500 mt-1">
+                  Featured premium visibility startup.
+                </p>
+              </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      {/* ================= TOP 10 SPONSORED ================= */}
+      {sponsored && sponsored.length > 0 && (
+        <section className="max-w-6xl mx-auto px-6 pb-24">
+          <div className="flex items-center gap-2 mb-10">
+            <Crown className="h-4 w-4 text-amber-500" />
+            <h2 className="text-xs uppercase tracking-[0.35em] font-semibold">
+              Top Sponsored
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {sponsored.map((startup) => (
               <Link key={startup.id} href={`/startup/${startup.slug}`}>
-                <div className="bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+                <div className="bg-white border border-zinc-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md transition hover:border-amber-400">
                   <img
                     src={startup.logo_url}
-                    alt={`${startup.name} logo`}
-                    className="max-h-12 object-contain grayscale hover:grayscale-0 transition-all"
+                    className="h-10 w-10 object-contain"
+                    alt=""
                   />
+                  <span className="text-sm font-medium">
+                    {startup.name}
+                  </span>
                 </div>
               </Link>
             ))}
@@ -124,93 +138,54 @@ export default async function Home() {
         </section>
       )}
 
-      {/* ================= FEATURED ================= */}
-      <section className="relative py-24 px-6 max-w-7xl mx-auto border-t border-zinc-200">
-        <div className="flex items-center gap-3 mb-12">
-          <Sparkles className="h-5 w-5 text-zinc-500" />
-          <h2 className="text-xs tracking-[0.35em] uppercase font-semibold">
-            Editorial Picks
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10">
-          {featured?.map((startup) => (
-            <Link key={startup.id} href={`/startup/${startup.slug}`}>
-              <div className="bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-lg transition flex items-center justify-center">
-                <img
-                  src={startup.logo_url}
-                  alt={`${startup.name} logo`}
-                  className="max-h-12 object-contain grayscale hover:grayscale-0 transition"
-                />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= RECENT ================= */}
-      <section className="relative py-24 px-6 max-w-7xl mx-auto border-t border-zinc-200">
-        <div className="flex justify-between items-center mb-12">
-          <div className="flex items-center gap-3">
-            <Clock className="h-5 w-5 text-zinc-400" />
-            <h2 className="text-xs tracking-[0.35em] uppercase font-semibold">
-              Recently Added
+      {/* ================= TOP 10 FEATURED ================= */}
+      {featured && featured.length > 0 && (
+        <section className="max-w-6xl mx-auto px-6 pb-28">
+          <div className="flex items-center gap-2 mb-10">
+            <Sparkles className="h-4 w-4 text-zinc-500" />
+            <h2 className="text-xs uppercase tracking-[0.35em] font-semibold">
+              Editorial Picks
             </h2>
           </div>
 
-          <Link
-            href="/startup"
-            className="group text-xs uppercase tracking-[0.3em] text-zinc-500 hover:text-black flex items-center gap-2 transition-colors"
-          >
-            View Full Registry
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {featured.map((startup) => (
+              <Link key={startup.id} href={`/startup/${startup.slug}`}>
+                <div className="bg-white border border-zinc-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md transition hover:border-black">
+                  <img
+                    src={startup.logo_url}
+                    className="h-10 w-10 object-contain"
+                    alt=""
+                  />
+                  <span className="text-sm font-medium">
+                    {startup.name}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10">
-          {recent?.map((startup) => (
-            <Link key={startup.id} href={`/startup/${startup.slug}`}>
-              <div className="bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-md transition flex items-center justify-center">
-                <img
-                  src={startup.logo_url}
-                  alt={`${startup.name} logo`}
-                  className="max-h-12 object-contain grayscale hover:grayscale-0 transition"
-                />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= WHY UPFORGE ================= */}
-      <div className="relative bg-white border-y border-zinc-200">
-        <div className="max-w-7xl mx-auto px-6 py-32">
-          <WhyUpforge />
-        </div>
-      </div>
-
-      {/* ================= SPONSOR CTA ================= */}
-      <section className="relative py-28 text-center bg-gradient-to-r from-zinc-900 to-black text-white">
-        <h3 className="text-3xl font-semibold mb-6">
-          Get Visible. Get Sponsored.
+      {/* ================= CTA ================= */}
+      <section className="py-24 text-center bg-black text-white">
+        <h3 className="text-2xl font-semibold mb-4">
+          Get Featured on UpForge
         </h3>
-        <p className="text-zinc-400 max-w-xl mx-auto mb-10">
-          Don’t get lost in the noise. Feature your startup in our Sponsored
-          Spotlight and get promoted across our social channels.
+        <p className="text-zinc-400 mb-8">
+          Increase visibility. Build trust. Reach serious builders.
         </p>
 
         <Link href="/sponsor">
-          <Button className="h-12 px-10 rounded-full bg-white text-black hover:bg-zinc-200 text-xs uppercase tracking-[0.25em]">
-            Sponsor With Us
+          <Button className="rounded-full px-8 h-11 bg-white text-black text-xs uppercase tracking-widest">
+            Sponsor Now
           </Button>
         </Link>
       </section>
 
-      {/* ================= FOOTER STRIP ================= */}
-      <div className="py-10 text-center text-[10px] tracking-[0.4em] uppercase text-zinc-400">
-        UpForge · Independent · Curated · Founder First · 2026
+      <div className="py-8 text-center text-[10px] tracking-[0.4em] uppercase text-zinc-400">
+        UpForge · Founder First · 2026
       </div>
-
     </div>
   )
 }
