@@ -9,9 +9,11 @@ import { BusinessForm } from "./business-form"
 export function Navbar() {
   const pathname = usePathname()
 
+  // Updated links as per your requirement
   const navLinks = [
+    { name: "Home", href: "/" },
     { name: "Directory", href: "/startup" },
-    { name: "Protocol", href: "/about" },
+    { name: "About Us", href: "/about" },
   ]
 
   return (
@@ -40,9 +42,8 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* DESKTOP NAV */}
+        {/* DESKTOP NAV - Shows Home, Directory, About Us */}
         <div className="hidden md:flex items-center gap-14">
-
           <div className="flex items-center gap-10">
             {navLinks.map((link) => {
               const isActive = pathname === link.href
@@ -51,9 +52,9 @@ export function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-xs uppercase tracking-[0.25em] transition-colors duration-200 ${
+                  className={`text-xs uppercase tracking-[0.25em] transition-colors duration-200 font-medium ${
                     isActive
-                      ? "text-black"
+                      ? "text-black border-b border-black pb-1"
                       : "text-zinc-500 hover:text-black"
                   }`}
                 >
@@ -69,7 +70,7 @@ export function Navbar() {
           <BusinessForm />
         </div>
 
-        {/* MOBILE */}
+        {/* MOBILE - Remains same as requested */}
         <div className="md:hidden">
           <BusinessForm isMobile={true} />
         </div>
