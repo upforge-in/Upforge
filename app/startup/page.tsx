@@ -7,7 +7,7 @@ export default async function StartupPage() {
   const { data: startups, error } = await supabase
     .from("startups")
     .select("*")
-    .eq("status", "approved") // same filter as home page
+    .eq("status", "approved")
     .order("created_at", { ascending: false })
 
   if (error) {
