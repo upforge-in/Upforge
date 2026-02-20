@@ -1,26 +1,26 @@
 import { createClient } from "@/lib/supabase/server"
 import { StartupCard } from "@/components/startup-card"
-import { SponsoredCard } from "@/components/sponsored-card"
 import { WhyUpforge } from "@/components/why-upforge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Sparkles, Clock } from "lucide-react"
 
 export default async function Home() {
   const supabase = await createClient()
 
-  const { data: sponsored } = await supabase
+  // Fetch 3 Top (Featured) Startups
+  const { data: featured } = await supabase
     .from("startups")
     .select("*")
     .eq("is_featured", true)
     .limit(3)
     .order("created_at", { ascending: false })
 
-  const { data: trending } = await supabase
+  // Fetch 3 Recent Startups
+  const { data: recent } = await supabase
     .from("startups")
     .select("*")
-    .eq("is_featured", false)
-    .limit(6)
+    .limit(3)
     .order("created_at", { ascending: false })
 
   return (
@@ -29,7 +29,6 @@ export default async function Home() {
       {/* ================= HERO ================= */}
       <section className="pt-44 pb-36 px-6">
         <div className="max-w-5xl mx-auto text-center">
-
           <div className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-8">
             Upforge · Founder Registry
           </div>
@@ -63,129 +62,56 @@ export default async function Home() {
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
 
-          {/* Quiet credibility strip */}
-          <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
-            <div>
-              <p className="text-3xl font-semibold">500+</p>
-              <p className="text-xs tracking-widest uppercase text-zinc-500 mt-2">
-                Vetted Startups
-              </p>
-            </div>
-            <div>
-              <p className="text-3xl font-semibold">850+</p>
-              <p className="text-xs tracking-widest uppercase text-zinc-500 mt-2">
-                Verified Founders
-              </p>
-            </div>
-            <div>
-              <p className="text-3xl font-semibold">$2.4B</p>
-              <p className="text-xs tracking-widest uppercase text-zinc-500 mt-2">
-                Capital Represented
-              </p>
-            </div>
-            <div>
-              <p className="text-3xl font-semibold">Daily</p>
-              <p className="text-xs tracking-widest uppercase text-zinc-500 mt-2">
-                Live Updates
-              </p>
-            </div>
+      {/* ================= TOP STARTUPS (3) ================= */}
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <div className="flex items-center gap-3 mb-12">
+          <Sparkles className="h-5 w-5 text-amber-500" />
+          <h2 className="text-2xl font-bold tracking-tight uppercase text-xs tracking-[0.3em]">Top Builders</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {featured?.map((startup) => (
+            <StartupCard key={startup.id} startup={startup} />
+          ))}
+        </div>
+      </section>
+
+      {/* ================= RECENT STARTUPS (3) ================= */}
+      <section className="py-24 px-6 max-w-7xl mx-auto border-t border-zinc-200">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+          <div className="flex items-center gap-3">
+            <Clock className="h-5 w-5 text-zinc-400" />
+            <h2 className="text-2xl font-bold tracking-tight uppercase text-xs tracking-[0.3em]">Recently Added</h2>
           </div>
-        </div>
-      </section>
-
-      {/* ================= MANIFESTO SECTION ================= */}
-      <section className="border-y border-zinc-200 bg-white py-28 px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-
-          <h2 className="text-4xl font-light">
-            Reputation is the new capital.
-          </h2>
-
-          <p className="text-zinc-600 leading-relaxed text-lg">
-            In a noisy ecosystem, visibility is easy.  
-            Credibility is rare.  
-            Upforge exists to document founders who are building with intent,
-            clarity, and long-term conviction.
-          </p>
-
-          <p className="text-zinc-500 text-sm tracking-widest uppercase">
-            Built for the serious, not the loud.
-          </p>
-        </div>
-      </section>
-
-      {/* ================= FEATURED ================= */}
-      <section className="py-36 px-6 max-w-7xl mx-auto">
-
-        <div className="mb-24 text-center">
-          <h2 className="text-4xl font-light">
-            Featured
-            <span className="block font-semibold">
-              High-Conviction Companies
-            </span>
-          </h2>
+          
+          <Link
+            href="/startup"
+            className="group text-xs uppercase tracking-[0.3em] text-zinc-500 hover:text-black flex items-center gap-2 transition-colors"
+          >
+            View All Registry
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {sponsored?.map((startup) => (
-            <div
-              key={startup.id}
-              className="bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-2xl transition duration-500"
-            >
-              <SponsoredCard startup={startup} />
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {recent?.map((startup) => (
+            <StartupCard key={startup.id} startup={startup} />
           ))}
         </div>
       </section>
 
       {/* ================= WHY UPFORGE ================= */}
-      <div className="bg-[#F3F3F1] border-y border-zinc-200">
+      <div className="bg-white border-y border-zinc-200">
         <div className="max-w-7xl mx-auto px-6 py-32">
           <WhyUpforge />
         </div>
       </div>
 
-      {/* ================= TRENDING ================= */}
-      <section className="py-36 px-6 max-w-7xl mx-auto">
-
-        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
-          <div>
-            <h2 className="text-4xl font-light">
-              Active
-              <span className="block font-semibold">
-                Founder Networks
-              </span>
-            </h2>
-            <p className="mt-6 text-zinc-600 max-w-md">
-              The most engaged and frequently viewed startups
-              within the Upforge registry.
-            </p>
-          </div>
-
-          <Link
-            href="/startup"
-            className="text-xs uppercase tracking-[0.3em] text-zinc-500 hover:text-black flex items-center gap-2"
-          >
-            Full Directory
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-          {trending?.map((startup) => (
-            <div
-              key={startup.id}
-              className="bg-white border border-zinc-200 rounded-xl p-6 hover:shadow-xl transition duration-500"
-            >
-              <StartupCard startup={startup} />
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ================= FINAL STRIP ================= */}
-      <div className="border-t border-zinc-200 py-12 text-center text-xs tracking-[0.35em] uppercase text-zinc-500">
+      <div className="py-12 text-center text-[10px] tracking-[0.4em] uppercase text-zinc-400">
         Upforge · Invite-only · Verified Founder Registry · 2026
       </div>
 
