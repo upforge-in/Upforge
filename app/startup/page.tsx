@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import StartupCard from "@/components/startup-card"
+import { StartupCard } from "@/components/startup-card"
 
 export default async function StartupPage() {
   const supabase = createClient()
