@@ -1,5 +1,9 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
+
+/* Note: 'tw-animate-css' and 'tailwindcss-animate' are now handled 
+  via your package.json dependencies and the Tailwind v4 engine. 
+  No manual @import is needed for them here.
+*/
 
 @custom-variant dark (&:is(.dark *));
 
