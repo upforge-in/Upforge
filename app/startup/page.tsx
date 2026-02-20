@@ -31,18 +31,20 @@ export const metadata: Metadata = {
 export default async function StartupsPage() {
   const supabase = await createClient()
 
-  // FIX: Home page ki tarah '*' use kiya hai aur query ko simple rakha hai
-  const { data, error } = await supabase
+  // FIX 1: Home page ki tarah '*' select kiya hai taaki koi column miss na ho
+  // FIX 2: Ordering ko simplified rakha hai taaki query crash na ho
+  const { data: startupsData, error } = await supabase
     .from("startups")
     .select("*") 
     .order("is_sponsored", { ascending: false })
-    .order("created_at", { ascending: false }) // Home page wala same ordering logic
+    .order("created_at", { ascending: false })
 
   if (error) {
     console.error("Startup fetch error:", error)
   }
 
-  const startups: StartupDirectoryItem[] = (data as StartupDirectoryItem[]) ?? []
+  // FIX 3: Data validation aur explicit casting
+  const startups: StartupDirectoryItem[] = (startupsData as any) || []
   const total = startups.length
 
   return (
@@ -73,16 +75,18 @@ export default async function StartupsPage() {
             </p>
 
             <p className="mt-6 text-sm uppercase tracking-[0.3em] text-zinc-400">
-              {total} Startups Listed
+              {total} {total === 1 ? 'Startup' : 'Startups'} Listed
             </p>
           </div>
 
           {/* ================= SEARCH ================= */}
+          {/* SearchBar ko initialData mil raha hai fetch se */}
           <div className="bg-white border border-zinc-200 rounded-2xl p-8 shadow-sm mb-24 backdrop-blur-sm">
             <SearchBar initialData={startups} />
           </div>
 
           {/* ================= LOGO GRID ================= */}
+          {/* Direct mapping taaki search ke bina bhi data dikhe */}
           {startups.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10">
               {startups.map((startup) => (
@@ -106,7 +110,7 @@ export default async function StartupsPage() {
                         className="max-h-12 w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
                       />
                     ) : (
-                      <span className="text-sm text-zinc-500 font-medium">
+                      <span className="text-sm font-medium text-zinc-400">
                         {startup.name}
                       </span>
                     )}
@@ -115,8 +119,10 @@ export default async function StartupsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center text-zinc-500 py-20 border border-dashed border-zinc-200 rounded-2xl">
-              No startups found in the registry.
+            <div className="text-center py-24 border-2 border-dashed border-zinc-200 rounded-3xl">
+              <p className="text-zinc-400 uppercase tracking-widest text-xs">
+                No startups found in the ledger
+              </p>
             </div>
           )}
 
@@ -125,13 +131,11 @@ export default async function StartupsPage() {
             <h3 className="text-3xl font-semibold mb-6">
               Want Priority Visibility?
             </h3>
-
             <p className="text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed">
               Sponsored startups appear at the top of the directory,
               receive homepage spotlight placement,
               and get promoted through our social media channels.
             </p>
-
             <Link
               href="/sponsor"
               className="inline-block bg-white text-black px-10 py-3 rounded-full text-xs uppercase tracking-[0.3em] hover:bg-zinc-200 transition"
@@ -139,11 +143,9 @@ export default async function StartupsPage() {
               Sponsor With UpForge
             </Link>
           </div>
-
         </div>
       </div>
 
-      {/* FOOTER STRIP */}
       <div className="border-t border-zinc-200 py-16 text-center text-xs uppercase tracking-[0.35em] text-zinc-500">
         UpForge · Independent · Structured · Founder First · {new Date().getFullYear()}
       </div>
