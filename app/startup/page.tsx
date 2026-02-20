@@ -31,20 +31,19 @@ export const metadata: Metadata = {
 export default async function StartupsPage() {
   const supabase = await createClient()
 
-  // FIX 1: Home page ki tarah '*' select kiya hai taaki koi column miss na ho
-  // FIX 2: Ordering ko simplified rakha hai taaki query crash na ho
+  // 🔥 Stable & production-safe query (same behaviour as home)
   const { data: startupsData, error } = await supabase
     .from("startups")
-    .select("*") 
-    .order("is_sponsored", { ascending: false })
+    .select("*")
+    .order("is_sponsored", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false })
 
   if (error) {
     console.error("Startup fetch error:", error)
   }
 
-  // FIX 3: Data validation aur explicit casting
-  const startups: StartupDirectoryItem[] = (startupsData as any) || []
+  // ✅ Safe typing (no more `as any`)
+  const startups: StartupDirectoryItem[] = startupsData ?? []
   const total = startups.length
 
   return (
@@ -75,18 +74,16 @@ export default async function StartupsPage() {
             </p>
 
             <p className="mt-6 text-sm uppercase tracking-[0.3em] text-zinc-400">
-              {total} {total === 1 ? 'Startup' : 'Startups'} Listed
+              {total} {total === 1 ? "Startup" : "Startups"} Listed
             </p>
           </div>
 
           {/* ================= SEARCH ================= */}
-          {/* SearchBar ko initialData mil raha hai fetch se */}
           <div className="bg-white border border-zinc-200 rounded-2xl p-8 shadow-sm mb-24 backdrop-blur-sm">
             <SearchBar initialData={startups} />
           </div>
 
           {/* ================= LOGO GRID ================= */}
-          {/* Direct mapping taaki search ke bina bhi data dikhe */}
           {startups.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10">
               {startups.map((startup) => (
