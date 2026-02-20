@@ -31,18 +31,18 @@ export const metadata: Metadata = {
 export default async function StartupsPage() {
   const supabase = await createClient()
 
-  // Home page ki tarah '*' use karke saara data fetch kar rahe hain
+  // FIX: Home page ki tarah '*' use kiya hai aur query ko simple rakha hai
   const { data, error } = await supabase
     .from("startups")
     .select("*") 
     .order("is_sponsored", { ascending: false })
-    .order("name", { ascending: true })
+    .order("created_at", { ascending: false }) // Home page wala same ordering logic
 
   if (error) {
     console.error("Startup fetch error:", error)
   }
 
-  const startups: StartupDirectoryItem[] = data ?? []
+  const startups: StartupDirectoryItem[] = (data as StartupDirectoryItem[]) ?? []
   const total = startups.length
 
   return (
@@ -73,7 +73,7 @@ export default async function StartupsPage() {
             </p>
 
             <p className="mt-6 text-sm uppercase tracking-[0.3em] text-zinc-400">
-              {total} {total === 1 ? "Startup" : "Startups"} Listed
+              {total} Startups Listed
             </p>
           </div>
 
@@ -106,7 +106,7 @@ export default async function StartupsPage() {
                         className="max-h-12 w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
                       />
                     ) : (
-                      <span className="text-sm font-medium text-zinc-500">
+                      <span className="text-sm text-zinc-500 font-medium">
                         {startup.name}
                       </span>
                     )}
@@ -115,8 +115,8 @@ export default async function StartupsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center text-zinc-500 py-20 border border-dashed border-zinc-200 rounded-3xl">
-              No startups listed yet. Check back later.
+            <div className="text-center text-zinc-500 py-20 border border-dashed border-zinc-200 rounded-2xl">
+              No startups found in the registry.
             </div>
           )}
 
