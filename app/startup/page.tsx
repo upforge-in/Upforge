@@ -31,11 +31,12 @@ export const metadata: Metadata = {
 export default async function StartupsPage() {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  // Featured (Editorial Picks)
+  const { data: featured } = await supabase
     .from("startups")
     .select("*")
-    .order("is_sponsored", { ascending: false })
-    .order("name", { ascending: true })
+    .eq("is_featured", true)
+    .order("created_at", { ascending: false })
 
   if (error) {
     console.error("Startup fetch error:", error)
