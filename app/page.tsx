@@ -9,35 +9,47 @@ export const metadata: Metadata = {
   title: "UpForge | India’s Independent Founder Network",
   description:
     "UpForge is India’s premium founder registry. Discover verified startups and sponsored spotlight companies.",
+  keywords: [
+    "Indian startups",
+    "startup directory India",
+    "founder registry",
+    "startup listing platform",
+    "sponsored startup promotion",
+  ],
+  openGraph: {
+    title: "UpForge – India’s Independent Founder Network",
+    description:
+      "A curated public ledger of serious builders. Verified startups. Real founders.",
+    type: "website",
+  },
 }
 
 export default async function Home() {
   const supabase = await createClient()
 
-  // SAME QUERY (unchanged)
+  // 🔥 Sponsored → Now Top 10
   const { data: sponsored } = await supabase
     .from("startups")
     .select("*")
     .eq("is_sponsored", true)
-    .limit(6)
     .order("created_at", { ascending: false })
+    .limit(10)
 
   return (
-    <div className="relative bg-[#FAFAF9] text-zinc-900 overflow-hidden">
+    <div className="relative bg-[#FAFAF9] text-zinc-900 antialiased overflow-hidden">
 
-      {/* Premium Soft Grid + Fade */}
+      {/* ===== PREMIUM SOFT GRID BACKGROUND ===== */}
       <div className="absolute inset-0 
-        bg-[linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)] 
-        bg-[size:80px_80px] opacity-[0.15] pointer-events-none" 
+        bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] 
+        bg-[size:80px_80px] opacity-[0.18] pointer-events-none" 
       />
-
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white opacity-60 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white opacity-70 pointer-events-none" />
 
       {/* ================= HERO ================= */}
-      <section className="relative pt-44 pb-32 px-6 text-center">
+      <section className="relative pt-44 pb-36 px-6 text-center">
         <div className="max-w-5xl mx-auto">
 
-          <div className="text-xs tracking-[0.4em] uppercase text-zinc-500 mb-8">
+          <div className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-8">
             UPFORGE · VERIFIED FOUNDER REGISTRY
           </div>
 
@@ -49,8 +61,8 @@ export default async function Home() {
           </h1>
 
           <p className="mt-10 text-lg text-zinc-600 max-w-2xl mx-auto leading-relaxed">
-            Discover serious founders. Sponsor visibility.
-            Build long-term credibility.
+            Discover serious founders. Sponsor visibility.  
+            Build reputation in the new digital economy.
           </p>
 
           <div className="mt-14 flex justify-center gap-5 flex-wrap">
@@ -73,26 +85,25 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ================= SPONSORED OF THE WEEK ================= */}
+      {/* ================= TOP 10 SPONSORED ================= */}
       {sponsored && sponsored.length > 0 && (
         <section className="relative py-24 px-6 max-w-6xl mx-auto">
 
           <div className="flex items-center gap-3 mb-12">
             <Crown className="h-5 w-5 text-amber-500" />
             <h2 className="text-xs tracking-[0.35em] uppercase font-semibold">
-              Sponsored of the Week
+              Top 10 Sponsored
             </h2>
           </div>
 
-          {/* Small Clean Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {/* Compact Premium Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
             {sponsored.map((startup) => (
               <Link key={startup.id} href={`/startup/${startup.slug}`}>
-                <div className="group bg-white/70 backdrop-blur-sm border border-zinc-200 rounded-xl px-5 py-4 
-                                hover:shadow-lg hover:-translate-y-1 transition-all duration-300 
+                <div className="group bg-white/80 backdrop-blur-sm border border-zinc-200 rounded-xl px-4 py-3 
+                                hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 
                                 flex items-center gap-3">
 
-                  {/* Small colorful logo */}
                   {startup.logo_url && (
                     <img
                       src={startup.logo_url}
@@ -101,8 +112,7 @@ export default async function Home() {
                     />
                   )}
 
-                  {/* Small name */}
-                  <span className="text-sm font-medium text-zinc-800 group-hover:text-black transition-colors">
+                  <span className="text-sm font-medium text-zinc-800 truncate">
                     {startup.name}
                   </span>
 
@@ -110,23 +120,25 @@ export default async function Home() {
               </Link>
             ))}
           </div>
+
         </section>
       )}
 
-      {/* ================= WHY ================= */}
-      <div className="relative bg-white border-y border-zinc-200 mt-20">
-        <div className="max-w-6xl mx-auto px-6 py-28">
+      {/* ================= WHY UPFORGE ================= */}
+      <div className="relative bg-white border-y border-zinc-200 mt-16">
+        <div className="max-w-7xl mx-auto px-6 py-32">
           <WhyUpforge />
         </div>
       </div>
 
-      {/* ================= CTA ================= */}
-      <section className="relative py-28 text-center bg-black text-white">
+      {/* ================= SPONSOR CTA ================= */}
+      <section className="relative py-28 text-center bg-gradient-to-r from-zinc-900 to-black text-white">
         <h3 className="text-3xl font-semibold mb-6">
-          Get Premium Visibility
+          Get Visible. Get Sponsored.
         </h3>
         <p className="text-zinc-400 max-w-xl mx-auto mb-10">
-          Sponsor your startup and appear in our weekly spotlight.
+          Don’t get lost in the noise. Feature your startup in our Top 10
+          Sponsored and get promoted across our social channels.
         </p>
 
         <Link href="/sponsor">
