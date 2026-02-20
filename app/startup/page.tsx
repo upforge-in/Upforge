@@ -1,34 +1,49 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { useState, useMemo } from "react"
+import { createClient } from "@/lib/supabase/client"
 import { SearchBar } from "@/components/search-bar"
 import Link from "next/link"
 import { Crown } from "lucide-react"
 import type { StartupDirectoryItem } from "@/types/startup"
-import type { Metadata } from "next"
+import { useEffect } from "react"
 
-export const metadata: Metadata = {
-  title: "Startup Directory | UpForge",
-  description:
-    "Explore verified Indian startups listed on UpForge.",
-}
+export default function StartupsPage() {
+  const supabase = createClient()
 
-export default async function StartupsPage() {
-  const supabase = await createClient()
+  const [startups, setStartups] = useState<StartupDirectoryItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [query, setQuery] = useState("")
 
-  const { data: startups, error } = await supabase
-    .from("startups")
-    .select("*")
-    .order("name", { ascending: true })
+  useEffect(() => {
+    const fetchStartups = async () => {
+      const { data, error } = await supabase
+        .from("startups")
+        .select("*")
+        .order("name", { ascending: true })
 
-  if (error) {
-    console.error("Startup fetch error:", error)
-  }
+      if (!error && data) {
+        setStartups(data)
+      }
 
-  const safeStartups: StartupDirectoryItem[] = startups ?? []
-  const total = safeStartups.length
+      setLoading(false)
+    }
+
+    fetchStartups()
+  }, [])
+
+  const filteredStartups = useMemo(() => {
+    if (!query) return startups
+
+    return startups.filter((startup) =>
+      startup.name.toLowerCase().includes(query.toLowerCase())
+    )
+  }, [query, startups])
+
+  const total = startups.length
 
   return (
     <div className="min-h-screen bg-[#FAFAF9] text-zinc-900">
-
       <div className="py-32 px-6">
         <div className="max-w-6xl mx-auto">
 
@@ -54,15 +69,19 @@ export default async function StartupsPage() {
             </p>
           </div>
 
-          {/* SEARCH ONLY */}
+          {/* SEARCH */}
           <div className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm mb-16">
-            <SearchBar initialData={safeStartups} />
+            <SearchBar query={query} setQuery={setQuery} />
           </div>
 
           {/* DIRECTORY GRID */}
-          {safeStartups.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-20 text-zinc-400 text-sm">
+              Loading startups...
+            </div>
+          ) : filteredStartups.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {safeStartups.map((startup) => (
+              {filteredStartups.map((startup) => (
                 <Link
                   key={startup.id}
                   href={`/startup/${startup.slug}`}
