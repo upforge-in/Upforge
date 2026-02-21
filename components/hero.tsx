@@ -1,10 +1,10 @@
-// officialnewbharat-art/upforge-next/upforge-next-7b82ebbdc8bb9b76587d7c750b36e9b3eafb2119/components/hero.tsx
 "use client"
 
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Play } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
+import { BusinessForm } from "@/components/business-form"
 
 export function Hero() {
   const router = useRouter()
@@ -16,6 +16,7 @@ export function Hero() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.15)_0%,transparent_70%)]" />
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] animate-pulse" />
+        
         {/* Subtle Grid overlay */}
         <div className="absolute inset-0 opacity-[0.05] [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none">
           <svg width="100%" height="100%">
@@ -79,12 +80,9 @@ export function Hero() {
           >
             Explore Startups <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button 
-            variant="outline"
-            className="h-16 px-10 rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white/10 transition-all text-sm font-black uppercase tracking-widest backdrop-blur-sm"
-          >
-            Submit Startup <Play className="ml-2 h-3 w-3 fill-current" />
-          </Button>
+          
+          {/* 100% Shared Logic: The BusinessForm triggers the same Popup UI */}
+          <BusinessForm />
         </motion.div>
 
         {/* 3D Glass Card Preview */}
