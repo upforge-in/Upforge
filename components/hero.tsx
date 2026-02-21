@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
-import { BusinessForm } from "@/components/business-form"
 
 export function Hero() {
   const router = useRouter()
@@ -75,14 +74,19 @@ export function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4"
         >
           <Button 
-            onClick={() => router.push("/startups")}
+            onClick={() => router.push("/startup")}
             className="h-16 px-10 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-500 transition-all text-sm font-black uppercase tracking-widest shadow-2xl shadow-indigo-500/20"
           >
             Explore Startups <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           
-          {/* 100% Shared Logic: The BusinessForm triggers the same Popup UI */}
-          <BusinessForm />
+          <Button 
+            onClick={() => router.push("/apply")}
+            variant="outline"
+            className="h-16 px-10 rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white/10 backdrop-blur-md transition-all text-sm font-black uppercase tracking-widest"
+          >
+            Join Ecosystem <Sparkles className="ml-2 h-4 w-4 text-indigo-400" />
+          </Button>
         </motion.div>
 
         {/* 3D Glass Card Preview */}
