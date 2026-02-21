@@ -37,44 +37,40 @@ export default function ApplyPage() {
     }
   }
 
-  const inputStyles = "h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-zinc-600 focus:border-indigo-500/50 focus:bg-white/[0.05] focus:ring-0 rounded-xl transition-all text-sm shadow-inner"
+  const inputStyles = "h-12 bg-[#0f1e2f]/60 border-white/10 text-white placeholder:text-zinc-500 focus:border-[#c6a43f]/50 focus:bg-[#0f1e2f]/80 focus:ring-0 rounded-xl transition-all text-sm shadow-inner"
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex flex-col md:flex-row relative overflow-hidden font-sans">
-      {/* 1. Refined Background Logic (No Quote Errors) */}
+    <div className="min-h-screen bg-[#0f1e2f] flex flex-col md:flex-row relative overflow-hidden font-sans">
+      {/* Subtle diagonal pattern overlay */}
+      <div 
+        className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        style={{
+          backgroundImage: `repeating-linear-gradient(45deg, #fff 0px, #fff 2px, transparent 2px, transparent 8px)`,
+        }}
+      />
+
+      {/* Background glow accents */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]" />
-        
-        {/* Safe Pattern Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
-          <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-          </svg>
-        </div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#c6a43f]/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#1e3a5f]/20 rounded-full blur-[120px]" />
       </div>
 
-      {/* 2. Left Panel: Context & Trust (Small & Compact) */}
-      <div className="relative w-full md:w-[35%] p-8 md:p-12 flex flex-col justify-between border-r border-white/5 bg-black/40 backdrop-blur-3xl z-10">
+      {/* 2. Left Panel: Context & Trust */}
+      <div className="relative w-full md:w-[35%] p-8 md:p-12 flex flex-col justify-between border-r border-white/5 bg-black/20 backdrop-blur-3xl z-10">
         <Link href="/" className="group flex items-center gap-2 text-zinc-500 hover:text-white transition-all mb-8 w-fit">
           <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
           <span className="text-[9px] font-black uppercase tracking-widest">Return Home</span>
         </Link>
 
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 shadow-lg">
-            <Sparkles className="h-3 w-3 text-indigo-400" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-300">Vault Registry</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c6a43f]/10 border border-[#c6a43f]/20 shadow-lg">
+            <Sparkles className="h-3 w-3 text-[#c6a43f]" />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#c6a43f]">Vault Registry</span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-[0.9] uppercase">
             Join the <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Registry.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c6a43f] to-[#e5c87b]">Registry.</span>
           </h1>
 
           <div className="space-y-6 pt-4">
@@ -95,7 +91,7 @@ export default function ApplyPage() {
         </div>
       </div>
 
-      {/* 3. Right Panel: Premium Form (Better Focus & Animation) */}
+      {/* 3. Right Panel: Premium Form */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-12 relative z-10">
         <AnimatePresence mode="wait">
           {!isSubmitted ? (
@@ -122,12 +118,12 @@ export default function ApplyPage() {
                   name="message" 
                   placeholder="Tell us about the problem you are solving..." 
                   required 
-                  className="min-h-[120px] bg-white/[0.02] border-white/10 text-white rounded-xl focus:border-indigo-500/50 focus:bg-white/[0.05] focus:ring-0 resize-none p-4 text-sm shadow-inner placeholder:text-zinc-600" 
+                  className="min-h-[120px] bg-[#0f1e2f]/60 border-white/10 text-white rounded-xl focus:border-[#c6a43f]/50 focus:bg-[#0f1e2f]/80 focus:ring-0 resize-none p-4 text-sm shadow-inner placeholder:text-zinc-500" 
                 />
                 
                 <Button 
                   disabled={isLoading}
-                  className="w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl uppercase text-[10px] font-black tracking-[0.3em] transition-all shadow-xl shadow-indigo-600/10 mt-2 relative overflow-hidden group"
+                  className="w-full h-14 bg-[#c6a43f] hover:bg-[#b08c2e] text-[#0f1e2f] rounded-xl uppercase text-[10px] font-black tracking-[0.3em] transition-all shadow-xl shadow-[#c6a43f]/10 mt-2 relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-3">
                     {isLoading ? <Loader2 className="animate-spin h-4 w-4" /> : (
@@ -148,14 +144,14 @@ export default function ApplyPage() {
                 <motion.div 
                   initial={{ scale: 0 }} 
                   animate={{ scale: 1 }} 
-                  className="h-full w-full rounded-full bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400"
+                  className="h-full w-full rounded-full bg-[#c6a43f]/10 border border-[#c6a43f]/30 flex items-center justify-center text-[#c6a43f]"
                 >
                   <CheckCircle2 className="h-12 w-12 animate-pulse" />
                 </motion.div>
                 <motion.div 
                   animate={{ rotate: 360 }} 
                   transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-[-8px] border border-dashed border-indigo-500/20 rounded-full"
+                  className="absolute inset-[-8px] border border-dashed border-[#c6a43f]/20 rounded-full"
                 />
               </div>
               <div className="space-y-2">
@@ -175,7 +171,7 @@ export default function ApplyPage() {
 function BenefitItem({ icon: Icon, title, desc }: { icon: any, title: string, desc: string }) {
   return (
     <div className="flex gap-4 items-start group">
-      <div className="h-10 w-10 shrink-0 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/10 group-hover:border-indigo-500/30 transition-all duration-300">
+      <div className="h-10 w-10 shrink-0 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#c6a43f] group-hover:bg-[#c6a43f]/10 group-hover:border-[#c6a43f]/30 transition-all duration-300">
         <Icon className="h-5 w-5" />
       </div>
       <div className="space-y-0.5">
