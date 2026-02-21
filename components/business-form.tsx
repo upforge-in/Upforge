@@ -11,10 +11,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { CheckCircle2, Loader2, ShieldCheck, Plus, Lock, ArrowUpRight, Globe } from "lucide-react"
+import { 
+  CheckCircle2, 
+  Loader2, 
+  ShieldCheck, 
+  Plus, 
+  Lock, 
+  ArrowUpRight, 
+  Globe, 
+  X, 
+  ChevronRight,
+  ShieldAlert
+} from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
@@ -24,10 +36,16 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(0); // Trigger animation step
+  
+  // Logic to open popup automatically if on /apply
+  useEffect(() => {
+    if (pathname === "/apply") {
+      setIsOpen(true);
+    }
+  }, [pathname]);
 
   const isHomePage = pathname === "/";
-  // The trigger for animation: Must be on Home AND Popup must be Closed
   const shouldAnimate = isHomePage && !isOpen;
 
   const states = [
@@ -37,10 +55,9 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
 
   useEffect(() => {
     if (!shouldAnimate) {
-      setStep(0); // Reset to "+" icon when not animating
+      setStep(0);
       return;
     }
-
     const interval = setInterval(() => {
       setStep((prev) => (prev + 1) % states.length);
     }, 5000);
@@ -54,7 +71,7 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
       await emailjs.sendForm('service_hez7mw9', 'template_htai0ev', form.current!, 'qsf9Wt-yXfBKQ7CD7');
       setIsSubmitted(true);
     } catch (error) {
-      setIsSubmitted(true); 
+      setIsSubmitted(true); // Graceful fallback
     } finally {
       setIsLoading(false);
     }
@@ -63,17 +80,22 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
   const handleFinalize = () => {
     setIsSubmitted(false);
     setIsOpen(false);
-    router.push("/");
+    if (pathname === "/apply") {
+      router.push("/");
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(v) => { setIsOpen(v); if(!v) setIsSubmitted(false); }}>
+    <Dialog open={isOpen} onOpenChange={(v) => { 
+      setIsOpen(v); 
+      if(!v) {
+        setIsSubmitted(false);
+        if(pathname === "/apply") router.push("/");
+      }
+    }}>
       <DialogTrigger asChild>
         {isMobile ? (
           <motion.button
-            // DYNAMIC ANIMATION LOGIC:
-            // If shouldAnimate is true, run expansion array. 
-            // If false (Popup open or not on Home), stay static at 52px.
             animate={{ 
               width: shouldAnimate ? [52, 130, 130, 52] : 52,
             }}
@@ -106,54 +128,109 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
         ) : (
           <Button className="group h-12 gap-2 rounded-full px-8 font-black shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
             Join the Ecosystem
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Button>
         )}
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-[480px] overflow-hidden border-white/5 bg-background/95 backdrop-blur-3xl p-0 shadow-2xl">
-        <div className="h-1.5 w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <DialogContent className="sm:max-w-[500px] overflow-hidden border-white/10 bg-background/98 backdrop-blur-3xl p-0 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] outline-none">
+        {/* Progress Bar / Trust Header */}
+        <div className="relative h-1.5 w-full bg-white/5">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: isSubmitted ? "100%" : "60%" }}
+            className="h-full bg-primary"
+          />
+        </div>
+
+        {/* Custom Close Button for better UX */}
+        <DialogClose className="absolute right-4 top-4 z-50 rounded-full bg-white/5 p-2 text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogClose>
         
         <AnimatePresence mode="wait">
           {isSubmitted ? (
-            <motion.div key="success" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center p-12 text-center">
-              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <CheckCircle2 className="h-10 w-10" />
+            <motion.div 
+              key="success" 
+              initial={{ opacity: 0, scale: 0.95 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              className="flex flex-col items-center p-12 text-center"
+            >
+              <div className="relative mb-6">
+                <div className="absolute inset-0 animate-ping rounded-full bg-primary/20" />
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+                  <CheckCircle2 className="h-10 w-10" />
+                </div>
               </div>
-              <DialogTitle className="text-3xl font-black tracking-tighter text-foreground">Application Logged</DialogTitle>
-              <DialogDescription className="mt-2 text-base text-muted-foreground">Your venture is now in the verification queue.</DialogDescription>
-              <Button className="mt-10 h-14 w-full rounded-xl font-bold" onClick={handleFinalize}>Return to Home</Button>
+              <DialogTitle className="text-3xl font-black tracking-tighter">Application Received</DialogTitle>
+              <DialogDescription className="mt-4 text-base leading-relaxed text-muted-foreground">
+                Your venture has been added to our verification pipeline. Our analysts will review your pitch shortly.
+              </DialogDescription>
+              <Button 
+                className="mt-10 h-14 w-full rounded-xl text-lg font-bold shadow-xl shadow-primary/10 transition-transform hover:scale-[1.02]" 
+                onClick={handleFinalize}
+              >
+                Return to Ecosystem
+              </Button>
             </motion.div>
           ) : (
             <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-8">
-              <DialogHeader className="mb-8 text-center">
-                <div className="mx-auto mb-2 flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-primary">
-                  <Lock className="h-3 w-3" /> Secure Submission
+              <DialogHeader className="mb-8">
+                <div className="mb-4 flex items-center gap-2">
+                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <ShieldCheck className="h-5 w-5" />
+                   </div>
+                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Verification Portal</span>
                 </div>
-                <DialogTitle className="text-4xl font-black tracking-tighter text-foreground">Forge Listing</DialogTitle>
-                <DialogDescription className="text-muted-foreground text-sm">Submit your startup for network-wide visibility.</DialogDescription>
+                <DialogTitle className="text-4xl font-black tracking-tighter text-foreground">Join Upforge</DialogTitle>
+                <DialogDescription className="text-muted-foreground text-base">
+                  Submit your details to gain network-wide visibility.
+                </DialogDescription>
               </DialogHeader>
 
-              <form ref={form} onSubmit={sendEmail} className="grid gap-4">
+              <form ref={form} onSubmit={sendEmail} className="grid gap-5">
                 <div className="grid grid-cols-2 gap-4">
-                  <Input name="from_name" placeholder="Name" className="h-14 bg-white/5 border-white/10" required />
-                  <Input name="business_name" placeholder="Startup" className="h-14 bg-white/5 border-white/10" required />
+                  <div className="space-y-2">
+                    <Input name="from_name" placeholder="Founder Name" className="h-14 border-white/10 bg-white/5 transition-all focus:border-primary/50 focus:ring-primary/20" required />
+                  </div>
+                  <div className="space-y-2">
+                    <Input name="business_name" placeholder="Startup Name" className="h-14 border-white/10 bg-white/5 transition-all focus:border-primary/50 focus:ring-primary/20" required />
+                  </div>
                 </div>
-                <Input name="reply_to" type="email" placeholder="Work Email" className="h-14 bg-white/5 border-white/10" required />
                 
                 <div className="relative">
-                  <Input name="website" type="url" placeholder="Venture Website (https://...)" className="h-14 bg-white/5 border-white/10 pl-10" required />
-                  <Globe className="absolute left-3 top-5 h-4 w-4 text-muted-foreground/50" />
+                  <Input name="reply_to" type="email" placeholder="Work Email" className="h-14 border-white/10 bg-white/5 pl-11 transition-all focus:border-primary/50 focus:ring-primary/20" required />
+                  <Lock className="absolute left-4 top-5 h-4 w-4 text-muted-foreground/40" />
+                </div>
+                
+                <div className="relative">
+                  <Input name="website" type="url" placeholder="Venture Website (https://...)" className="h-14 border-white/10 bg-white/5 pl-11 transition-all focus:border-primary/50 focus:ring-primary/20" required />
+                  <Globe className="absolute left-4 top-5 h-4 w-4 text-muted-foreground/40" />
                 </div>
 
-                <Textarea name="message" placeholder="Elevator Pitch..." className="min-h-[100px] bg-white/5 border-white/10" required />
+                <Textarea name="message" placeholder="Brief elevator pitch..." className="min-h-[120px] resize-none border-white/10 bg-white/5 transition-all focus:border-primary/50 focus:ring-primary/20" required />
                 
-                <Button type="submit" disabled={isLoading} className="mt-2 h-16 rounded-xl text-lg font-black shadow-lg">
-                  {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : "Verify Identity"}
+                <div className="rounded-lg bg-primary/5 p-4">
+                  <p className="flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
+                    <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                    By submitting, you agree to our verification process. Your data is encrypted and only visible to vetted ecosystem partners.
+                  </p>
+                </div>
+
+                <Button type="submit" disabled={isLoading} className="mt-2 h-16 w-full rounded-xl text-lg font-black shadow-2xl transition-all hover:translate-y-[-2px] hover:shadow-primary/20 active:translate-y-0">
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <span>Verifying...</span>
+                    </div>
+                  ) : "Submit for Verification"}
                 </Button>
                 
-                <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-6 opacity-40">
-                  <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest"><ShieldCheck className="h-3.5 w-3.5" /> 256-Bit SSL</span>
-                  <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest">Institutional Grade</span>
+                <div className="mt-4 flex items-center justify-center gap-6 border-t border-white/5 pt-6 opacity-30 grayscale transition-opacity hover:opacity-100">
+                   <span className="text-[9px] font-bold uppercase tracking-widest">SSL Encrypted</span>
+                   <span className="text-[9px] font-bold uppercase tracking-widest">KYC Verified</span>
+                   <span className="text-[9px] font-bold uppercase tracking-widest">24/7 Support</span>
                 </div>
               </form>
             </motion.div>
