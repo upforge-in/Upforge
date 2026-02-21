@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogDescription,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -50,14 +49,18 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
     }
   }
 
+  // Common function for closing and navigating home
   const handleClose = () => {
     setIsSubmitted(false)
     setIsOpen(false)
-    if (pathname === "/apply") router.push("/")
+    router.push("/")
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) handleClose()
+      else setIsOpen(true)
+    }}>
       <DialogTrigger asChild>
         {isMobile ? (
           <Button className="h-12 rounded-full px-6">
@@ -71,10 +74,15 @@ export function BusinessForm({ isMobile = false }: { isMobile?: boolean }) {
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[480px] p-0 bg-white border border-zinc-200 rounded-2xl shadow-xl">
-
-        <DialogClose className="absolute right-4 top-4">
+        
+        {/* Updated Cross Button: Ek click par home page pe le jayega */}
+        <button 
+          onClick={handleClose}
+          className="absolute right-4 top-4 z-50 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none"
+        >
           <X className="h-4 w-4 text-zinc-500" />
-        </DialogClose>
+          <span className="sr-only">Close</span>
+        </button>
 
         <AnimatePresence mode="wait">
           {isSubmitted ? (
