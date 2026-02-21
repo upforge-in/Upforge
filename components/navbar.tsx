@@ -9,7 +9,7 @@ import { BusinessForm } from "./business-form"
 export function Navbar() {
   const pathname = usePathname()
 
-  // Updated links as per your requirement
+  // Desktop navigation links
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Directory", href: "/startup" },
@@ -42,7 +42,7 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* DESKTOP NAV - Shows Home, Directory, About Us */}
+        {/* DESKTOP NAV */}
         <div className="hidden md:flex items-center gap-14">
           <div className="flex items-center gap-10">
             {navLinks.map((link) => {
@@ -66,12 +66,12 @@ export function Navbar() {
 
           <div className="h-5 w-px bg-zinc-200" />
 
-          {/* CTA */}
+          {/* CTA Desktop */}
           <BusinessForm />
         </div>
 
-        {/* MOBILE - Remains same as requested */}
-        <div className="md:hidden">
+        {/* MOBILE - "Connect then Grow" logic restored */}
+        <div className="md:hidden flex items-center">
           <BusinessForm isMobile={true} />
         </div>
 
