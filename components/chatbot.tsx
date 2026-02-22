@@ -123,7 +123,7 @@ export function Chatbot() {
                 >
                   {msg.role === "assistant" && (
                     <div className="relative h-9 w-9 rounded-xl bg-white border border-[#1e3a5f]/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                      <Image src="/robot.jpg" alt="Robot" fill className="object-contain p-1" />
+                      <Image src="/logo.jpg" alt="Robot" fill className="object-contain p-1" />
                     </div>
                   )}
                   <div
