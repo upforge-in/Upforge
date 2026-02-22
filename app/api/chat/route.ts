@@ -32,14 +32,24 @@ export async function POST(req: Request) {
           ...messages,
         ],
         temperature: 0.7,
-        max_tokens: 150, // helps keep answers short
+        max_tokens: 150,
       }),
     });
 
     const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(data.error?.message || "Groq API error");
+      console.error("Groq API error:", data);
+      return NextResponse.json(
+        { error: data.error?.message || "Groq API error" },
+        { status: response.status }
+      );
     }
+
+    if (!data.choices || data.choices.length === 0) {
+      return NextResponse.json({ error: "No response from AI" }, { status: 500 });
+    }
+
     return NextResponse.json({ message: data.choices[0].message.content });
   } catch (error) {
     console.error("Chat API error:", error);
