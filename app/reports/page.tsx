@@ -100,17 +100,12 @@ export default function ReportsPage() {
                 <p className="text-[#4a4a4a] mb-4">Send your requirements.</p>
                 <div className="space-y-2">
                   <a
-                    href="mailto:contact@upforge.in"
+                    href="mailto:info@upforge.in"
                     className="block text-lg font-medium text-[#1e3a5f] hover:text-[#c6a43f] transition-colors"
                   >
-                    contact@upforge.in
+                    info@upforge.in
                   </a>
-                  <a
-                    href="mailto:support@upforge.in"
-                    className="block text-lg font-medium text-[#1e3a5f] hover:text-[#c6a43f] transition-colors"
-                  >
-                    support@upforge.in
-                  </a>
+                
                 </div>
               </div>
             </div>
