@@ -1,86 +1,72 @@
-// app/layout.tsx
-import type { Metadata, Viewport } from "next"
+import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
+import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
-const inter = Inter({ 
-  subsets: ["latin"], 
+const inter = Inter({
+  subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://upforge.in"),
   title: {
-    default: "UpForge | India's Independent Founder Registry",
+    default: "UpForge | India’s Independent Founder Registry",
     template: "%s | UpForge",
   },
-  description: "A structured public registry of verified founders and startups in India, built for long-term credibility and signal transparency.",
-  keywords: ["founder registry", "verified startups", "India founders", "startup verification", "credibility infrastructure"],
+  description:
+    "UpForge is a structured public registry of verified founders and startups in India, built for long-term credibility and signal transparency.",
+  applicationName: "UpForge",
   authors: [{ name: "UpForge" }],
   creator: "UpForge",
   publisher: "UpForge",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL("https://upforge.in"),
   alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "UpForge | India's Independent Founder Registry",
-    description: "A structured public registry of verified founders and startups in India, built for long-term credibility and signal transparency.",
-    url: "https://upforge.in",
-    siteName: "UpForge",
-    images: [
-      {
-        url: "/og-registry.jpg",
-        width: 1200,
-        height: 630,
-        alt: "UpForge - India's Independent Founder Registry",
-      },
-    ],
-    locale: "en_IN",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "UpForge | India's Independent Founder Registry",
-    description: "A structured public registry of verified founders and startups in India, built for long-term credibility and signal transparency.",
-    images: ["/og-registry.jpg"],
+    canonical: "https://upforge.in",
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      noimageindex: false,
     },
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/icon.png", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-icon.png" },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://upforge.in",
+    siteName: "UpForge",
+    title: "UpForge | India’s Independent Founder Registry",
+    description:
+      "A structured public registry of verified founders and startups in India.",
+    images: [
+      {
+        url: "/og-main.jpg",
+        width: 1200,
+        height: 630,
+        alt: "UpForge – India’s Independent Founder Registry",
+      },
     ],
   },
-  manifest: "/manifest.json",
-}
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  themeColor: "#0B1420",
+  twitter: {
+    card: "summary_large_image",
+    title: "UpForge | India’s Independent Founder Registry",
+    description:
+      "A structured public registry of verified founders and startups in India.",
+    images: ["/og-main.jpg"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  category: "technology",
 }
 
 export default function RootLayout({
@@ -90,20 +76,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <head>
-        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-      </head>
-      <body className={`${inter.variable} font-sans antialiased bg-[#0B1420]`}>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
+      <body
+        className={`${inter.variable} antialiased font-sans bg-[#0B1420] text-[#EAEAEA]`}
+      >
+        <Navbar />
+        <main className="min-h-screen">{children}</main>
+        <Footer />
+        <Toaster />
         <Analytics />
-        
-        {/* Structured Data */}
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -112,16 +93,15 @@ export default function RootLayout({
               "@type": "Organization",
               name: "UpForge",
               url: "https://upforge.in",
-              logo: "https://upforge.in/logo.png",
+              logo: "https://upforge.in/og-main.jpg",
               foundingDate: "2025",
-              description: "India's Independent Founder Registry",
-              areaServed: "India",
-              knowsAbout: ["Startup Verification", "Founder Registry", "Credibility Infrastructure"],
-              sameAs: [
-                "https://twitter.com/upforge_in",
-                "https://linkedin.com/company/upforge"
-              ]
-            })
+              foundingLocation: {
+                "@type": "Country",
+                name: "India",
+              },
+              description:
+                "India’s Independent Founder Registry. A structured public registry of verified founders and startups.",
+            }),
           }}
         />
       </body>
