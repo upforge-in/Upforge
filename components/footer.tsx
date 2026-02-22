@@ -138,26 +138,8 @@ export function Footer() {
             </h4>
 
             <div className="space-y-3">
-              <Link
-                href="/contact"
-                className="text-sm text-white hover:text-[#c6a43f] transition-colors font-medium"
-              >
-                Contact
-              </Link>
-
-              <Link
-                href="/faq"
-                className="block text-sm text-zinc-400 hover:text-white transition-colors font-medium"
-              >
-                FAQ
-              </Link>
-
-              <a
-                href="mailto:connect@upforge.in"
-                className="block text-sm text-zinc-400 hover:text-white transition-colors font-medium"
-              >
-                connect@upforge.in
-              </a>
+               { name: "Contact", href: "/contact" },
+               { name: "FAQ", href: "/faq" },
             </div>
 
             {/* Social Icons */}
@@ -173,7 +155,7 @@ export function Footer() {
               </a>
 
               <a
-                href="#"
+                href="https://www.linkedin.com/company/upforge-india/"
                 className="h-9 w-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#c6a43f] hover:border-[#c6a43f] transition-all"
                 aria-label="X"
               >
