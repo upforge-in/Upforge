@@ -16,69 +16,44 @@ export const viewport: Viewport = {
   themeColor: "#1e3a5f",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://upforge.in"),
   title: {
-    default: "UpForge | India's Independent Founder Registry",
-    template: "%s | UpForge Legacy",
+    default: "UpForge – India's Founder Registry",
+    template: "%s | UpForge",
   },
-  description: "The definitive high-trust database for Indian founders. Discover verified startups, access elite networking, and secure your place in India's startup history.",
-  keywords: [
-    "Startup Directory India",
-    "Verified Founders India",
-    "Premium Startup Network",
-    "UpForge Registry",
-    "Angel Investors India",
-    "Founder Verification",
-    "Startup Archive",
-  ],
+  description: "A premium directory for verified Indian startups. Get discovered, build authority, and connect with serious builders.",
+  keywords: ["Startup Directory India", "Verified Founders", "Premium Startup Network", "UpForge"],
   authors: [{ name: "UpForge Team" }],
-  creator: "UpForge",
-  publisher: "UpForge Intelligence",
-  robots: { index: true, follow: true },
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: "https://upforge.in",
-    siteName: "UpForge Registry",
-    title: "UpForge | The Legacy Founder Network",
-    description: "Where India's most ambitious builders are cataloged.",
-    images: [{ url: "/og-main.jpg", width: 1200, height: 630 }],
+    siteName: "UpForge",
+    title: "UpForge – India's Founder Registry",
+    description: "Where ambitious founders gain the visibility they deserve.",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     site: "@upforge_in",
     creator: "@upforge_in",
-    title: "UpForge | India's Founder Registry",
-    description: "The premium ledger for verified Indian startups.",
-    images: ["/og-main.jpg"],
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
-      <body className={`${inter.variable} ${bricolage.variable} antialiased font-sans bg-[#fcfcfb] text-[#1a1a1a] selection:bg-[#1e3a5f]/10 selection:text-[#1e3a5f]`}>
+      <body className={`${inter.variable} ${bricolage.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <div className="flex min-h-screen flex-col relative">
-            {/* Architectural background */}
-            <div className="fixed inset-0 z-[-1] pointer-events-none">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1e3a5f08,transparent_50%)]" />
-              <div className="absolute inset-0 opacity-[0.015] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:60px_60px]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#fcfcfb] via-transparent to-transparent" />
-            </div>
-
+            {/* Subtle noise texture */}
+            <div className="fixed inset-0 opacity-[0.02] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4xIiAvPjwvc3ZnPg==')] bg-repeat" />
+            
             <Navbar />
-            <main className="flex-1 animate-in fade-in duration-700 ease-out">{children}</main>
+            <main className="flex-1 animate-fade-in">{children}</main>
             <Footer />
             <Chatbot />
             <Toaster />
