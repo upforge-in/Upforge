@@ -102,8 +102,8 @@ export default async function Home() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-[#1e3a5f]/30 to-[#c6a43f]/30 rounded-full blur-3xl animate-pulse-glow"></div>
         </div>
 
-        {/* Subtle grid overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M0 0h60v60H0z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/%3E%3C/svg%3E')] pointer-events-none"></div>
+        {/* Subtle grid overlay - FIXED using template literal */}
+        <div className={`absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M0 0h60v60H0z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/%3E%3C/svg%3E')] pointer-events-none`}></div>
 
         <div className="relative z-10">
           {/* ================= HERO ================= */}
@@ -360,7 +360,8 @@ export default async function Home() {
           {/* ================= CTA ================= */}
           <section className="relative py-40 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a5f] via-[#14304a] to-[#c6a43f] opacity-30 blur-3xl"></div>
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M0 0h60v60H0z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/%3E%3C/svg%3E')]"></div>
+            {/* Grid overlay - FIXED using template literal */}
+            <div className={`absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M0 0h60v60H0z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/%3E%3C/svg%3E')]`}></div>
             
             <div className="relative max-w-4xl mx-auto text-center px-6">
               <h3 className="text-5xl md:text-6xl font-black mb-6">
