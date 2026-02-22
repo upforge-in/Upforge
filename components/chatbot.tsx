@@ -66,7 +66,7 @@ export function Chatbot() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {/* Nudge Bubble */}
+      {/* Nudge Bubble with Robot */}
       <AnimatePresence>
         {showNudge && !isOpen && (
           <motion.div
@@ -75,8 +75,8 @@ export function Chatbot() {
             exit={{ opacity: 0, x: 20, scale: 0.8 }}
             className="mb-4 mr-2 bg-white border border-[#1e3a5f]/10 rounded-2xl shadow-xl p-4 flex items-center gap-3"
           >
-            <div className="relative h-8 w-8 shrink-0">
-              <Image src="/robot.svg" alt="Robot" fill className="object-contain" />
+            <div className="relative h-10 w-10 shrink-0"> {/* larger robot */}
+              <Image src="/robot.jpg" alt="Robot" fill className="object-contain rounded-full" />
             </div>
             <p className="text-sm font-medium text-[#1e1b1b]">
               May I help you navigate the Registry? ✨
@@ -93,33 +93,23 @@ export function Chatbot() {
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             className="mb-6 w-[400px] h-[600px] bg-white rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border border-[#1e3a5f]/10 flex flex-col overflow-hidden"
           >
-            {/* Header */}
-            <div className="p-8 bg-[#0f1e2f] text-white flex justify-between items-center relative">
+            {/* Header - without close button */}
+            <div className="p-8 bg-[#0f1e2f] text-white flex items-center gap-4 relative">
               <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Sparkles size={80} />
               </div>
-              <div className="flex items-center gap-4 z-10">
-                <div className="relative h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center">
-                  <Image src="/robot.jpg" alt="Robot" fill className="object-contain p-2" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg tracking-tight">UpForge Intelligence</h3>
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <p className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-black">
-                      Concierge Active
-                    </p>
-                  </div>
+              <div className="relative h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center"> {/* larger robot */}
+                <Image src="/robot.jpg" alt="Robot" fill className="object-contain p-2 rounded-full" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg tracking-tight">UpForge Intelligence</h3>
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <p className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-black">
+                    Concierge Active
+                  </p>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="rounded-full hover:bg-white/10 text-white"
-              >
-                <X className="h-5 w-5" />
-              </Button>
             </div>
 
             {/* Chat Area */}
@@ -132,8 +122,8 @@ export function Chatbot() {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} gap-3`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="relative h-8 w-8 rounded-xl bg-white border border-[#1e3a5f]/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                      <Image src="/robot.svg" alt="Robot" fill className="object-contain p-1" />
+                    <div className="relative h-9 w-9 rounded-xl bg-white border border-[#1e3a5f]/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <Image src="/robot.jpg" alt="Robot" fill className="object-contain p-1" />
                     </div>
                   )}
                   <div
@@ -149,8 +139,8 @@ export function Chatbot() {
               ))}
               {isLoading && (
                 <div className="flex gap-3 animate-pulse">
-                  <div className="relative h-8 w-8 rounded-xl bg-white border border-[#1e3a5f]/10 overflow-hidden">
-                    <Image src="/robot.svg" alt="Robot" fill className="object-contain p-1" />
+                  <div className="relative h-9 w-9 rounded-xl bg-white border border-[#1e3a5f]/10 overflow-hidden">
+                    <Image src="/robot.jpg" alt="Robot" fill className="object-contain p-1" />
                   </div>
                   <div className="h-12 w-24 bg-white border border-[#1e3a5f]/10 rounded-2xl" />
                 </div>
@@ -196,7 +186,7 @@ export function Chatbot() {
         )}
       </AnimatePresence>
 
-      {/* Floating Button */}
+      {/* Floating Button with Robot */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
         className="h-16 w-16 rounded-[2rem] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.3)] hover:scale-110 active:scale-95 transition-all bg-[#0f1e2f] border border-[#c6a43f]/20 relative overflow-hidden"
@@ -204,8 +194,8 @@ export function Chatbot() {
         {isOpen ? (
           <X className="h-7 w-7 text-white" />
         ) : (
-          <div className="relative h-10 w-10">
-            <Image src="/robot.svg" alt="Robot" fill className="object-contain" />
+          <div className="relative h-12 w-12"> {/* larger robot */}
+            <Image src="/robot.jpg" alt="Robot" fill className="object-contain rounded-full" />
           </div>
         )}
       </Button>
