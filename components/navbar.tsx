@@ -29,56 +29,59 @@ export function Navbar() {
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[#0a0c0e]/80 backdrop-blur-xl py-3 shadow-2xl shadow-black/50 border-b border-white/10"
-          : "bg-transparent py-5"
+          ? "py-4"
+          : "py-6"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative h-10 w-10 overflow-hidden rounded-xl border border-white/20 bg-white/5 p-2 backdrop-blur-sm group-hover:border-[#c6a43f]/50 transition-all duration-300">
+      <nav className={`max-w-5xl mx-auto px-6 flex items-center justify-between transition-all duration-500 ${
+        scrolled 
+          ? "bg-white/80 backdrop-blur-xl py-2 px-4 rounded-full border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]" 
+          : ""
+      }`}>
+        {/* Logo Section */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="relative h-8 w-8 overflow-hidden rounded-lg bg-black p-1.5 transition-transform duration-500 group-hover:rotate-[10deg]">
             <Image
               src="/logo.jpg"
               alt="UpForge"
               fill
-              className="object-contain"
+              className="object-contain invert"
               priority
             />
           </div>
-          <span className="text-xl font-display font-bold tracking-tight text-white group-hover:text-[#c6a43f] transition-colors">
+          <span className="text-lg font-display font-bold tracking-tighter text-black">
             UpForge
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Navigation - Minimalist style */}
+        <div className="hidden md:flex items-center gap-10">
           {links.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.name}
                 href={link.href}
-                className={`relative text-sm font-medium transition-colors ${
+                className={`relative text-[13px] font-medium tracking-wide transition-colors duration-300 ${
                   isActive
-                    ? "text-[#c6a43f]"
-                    : "text-gray-300 hover:text-white"
+                    ? "text-black"
+                    : "text-gray-500 hover:text-black"
                 }`}
               >
                 {link.name}
                 {isActive && (
-                  <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#c6a43f] to-[#1e3a5f] rounded-full" />
+                  <span className="absolute -bottom-1 left-0 w-1 h-1 bg-black rounded-full mx-auto right-0" />
                 )}
               </Link>
             );
           })}
         </div>
 
-        {/* CTA Button */}
+        {/* CTA Button - "Less is More" Design */}
         <div className="hidden md:block">
           <Link href="/apply">
-            <Button className="group relative rounded-full px-6 h-10 bg-gradient-to-r from-[#c6a43f] to-[#b08c2e] text-black hover:from-[#b08c2e] hover:to-[#9e7a29] text-xs font-bold uppercase tracking-wider border-0 overflow-hidden">
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              Apply for Registry
+            <Button variant="outline" className="premium-button rounded-full px-6 h-9 border-black text-black bg-transparent hover:bg-black hover:text-white text-[12px] font-bold uppercase tracking-tighter transition-all duration-300">
+              Join Registry
             </Button>
           </Link>
         </div>
@@ -86,37 +89,45 @@ export function Navbar() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(true)}
-          className="md:hidden p-2 text-white hover:text-[#c6a43f] transition-colors"
+          className="md:hidden p-2 text-black hover:opacity-70 transition-opacity"
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-5 w-5" />
         </button>
       </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer - High-End Aesthetic */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-[#0a0c0e] animate-in fade-in slide-in-from-right duration-500">
-          <div className="flex justify-between items-center p-6 border-b border-white/10">
-            <span className="text-xs font-medium tracking-widest text-gray-400">
-              Menu
+        <div className="fixed inset-0 z-[100] bg-white animate-in fade-in duration-300 flex flex-col">
+          <div className="flex justify-between items-center p-8">
+            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-400">
+              Navigation
             </span>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-2 text-white hover:text-[#c6a43f] transition-colors"
+              className="p-2 text-black"
             >
-              <X className="h-8 w-8" />
+              <X className="h-6 w-6" />
             </button>
           </div>
-          <div className="flex flex-col items-center justify-center h-[70vh] space-y-8">
-            {links.map((link) => (
+          <div className="flex flex-col px-10 pt-10 space-y-6">
+            {links.map((link, i) => (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="text-4xl font-display font-light text-white hover:text-[#c6a43f] transition-colors"
+                className="text-5xl font-display font-bold tracking-tighter text-black hover:translate-x-2 transition-transform duration-300"
+                style={{ animationDelay: `${i * 50}ms` }}
               >
                 {link.name}
               </Link>
             ))}
+          </div>
+          <div className="mt-auto p-10">
+            <Link href="/apply" onClick={() => setIsOpen(false)}>
+              <Button className="w-full rounded-full h-16 bg-black text-white text-lg font-bold">
+                Apply for Registry
+              </Button>
+            </Link>
           </div>
         </div>
       )}
