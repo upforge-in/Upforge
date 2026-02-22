@@ -3,178 +3,130 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Sparkles, ShieldCheck, Globe, Fingerprint } from "lucide-react"
-import { Linkedin, Instagram } from "lucide-react"
+import { ArrowRight, ShieldCheck, Globe, Fingerprint, Lock } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
-  const footerLinks = {
-    Registry: [
-      { name: "Live Directory", href: "/startup" },
-      { name: "Verification Standards", href: "/verification" },
-      { name: "Elite Founder Criteria", href: "/about" },
-    ],
-    Intelligence: [
-      { name: "Market Reports", href: "/reports" },
-      { name: "Sponsorship Deck", href: "/sponsor" },
-      { name: "API Access", href: "/docs" },
-    ],
-    Compliance: [
-      { name: "Privacy Protocol", href: "/privacy" },
-      { name: "Terms of Service", href: "/terms" },
-      { name: "Trust & Safety", href: "/trust" },
-    ],
-  }
+  const sections = [
+    {
+      title: "Navigation",
+      links: [
+        { name: "The Registry", href: "/startup" },
+        { name: "Founder Network", href: "/about" },
+        { name: "Reports", href: "/reports" },
+      ],
+    },
+    {
+      title: "Legals",
+      links: [
+        { name: "Privacy Protocol", href: "/privacy" },
+        { name: "Terms of Entry", href: "/terms" },
+        { name: "Trust & Safety", href: "/trust" },
+      ],
+    },
+    {
+      title: "Intelligence",
+      links: [
+        { name: "Sponsorship Deck", href: "/sponsor" },
+        { name: "API Registry", href: "/docs" },
+        { name: "Status", href: "/verification" },
+      ],
+    },
+  ]
 
   return (
-    <footer className="bg-[#0a0a0b] text-white pt-32 pb-12 overflow-hidden relative border-t border-white/5">
-
-      {/* BACKGROUND */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,#1e3a5f15,transparent_50%)]" />
-        <div className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:100px_100px]" />
+    <footer className="bg-[#0F172A] text-white pt-32 pb-16 relative overflow-hidden">
+      
+      {/* BACKGROUND DEPTH */}
+      <div className="absolute inset-0 pointer-events-none opacity-20">
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#C6A43F] to-transparent" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-
-        {/* PREMIUM CTA */}
-        <div className="mb-28">
-          <div className="relative group overflow-hidden rounded-[3rem] border border-white/10 bg-white/[0.02] backdrop-blur-3xl p-1">
-
-            <div className="relative bg-[#0a0a0b] rounded-[2.9rem] p-10 md:p-16 flex flex-col lg:flex-row items-center justify-between gap-12 border border-white/5">
-              <div className="max-w-2xl text-center lg:text-left space-y-6">
-
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 text-gold text-[10px] font-bold uppercase tracking-[0.3em] border border-gold/20">
-                  <Sparkles className="h-3.5 w-3.5" /> Institutional Access
-                </div>
-
-                <h3 className="text-4xl md:text-5xl font-serif italic tracking-tight leading-tight">
-                  Establish your presence in <br />
-                  <span className="text-white not-italic font-sans font-bold uppercase">
-                    The Founder Ledger.
-                  </span>
-                </h3>
-
-                <p className="text-zinc-500 text-lg font-light leading-relaxed">
-                  3,000+ verified startups · 500+ sponsored brands · 10,000+ monthly visitors.  
-                  Built for authority. Engineered for trust.
-                </p>
-              </div>
-
-              <Link href="/sponsor" className="flex-shrink-0">
-                <Button className="h-20 px-12 rounded-full bg-white text-black hover:bg-gold hover:text-black transition-all duration-500 text-xs font-bold uppercase tracking-[0.2em] shadow-2xl hover:scale-105 active:scale-95">
-                  Request Feature
-                  <ArrowRight className="ml-3 h-5 w-5" />
-                </Button>
-              </Link>
+      <div className="max-w-7xl mx-auto px-8 relative z-10">
+        
+        {/* TOP CALL TO ACTION: The Invitation */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-3 px-4 py-2 border border-[#C6A43F]/30 bg-[#C6A43F]/5">
+              <Lock className="h-3 w-3 text-[#C6A43F]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#C6A43F]">
+                Institutional Membership
+              </span>
             </div>
+            <h3 className="text-5xl md:text-6xl font-display font-light leading-tight">
+              Establishing the <br /> 
+              <span className="italic font-serif text-[#C6A43F]">Legacy of Builders.</span>
+            </h3>
           </div>
-        </div>
-
-        {/* MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24 border-b border-white/5 pb-24">
-
-          {/* BRAND COLUMN */}
-          <div className="lg:col-span-4 space-y-10">
-            <Link href="/" className="flex items-center gap-4 group">
-              <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white p-2 group-hover:scale-110 transition-transform">
-                <Image
-                  src="/logo.jpg"
-                  alt="UpForge"
-                  fill
-                  className="object-contain p-2"
-                />
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-2xl font-bold tracking-tighter uppercase">UPFORGE</span>
-                <span className="text-[9px] uppercase tracking-[0.4em] text-gold font-bold mt-1.5">
-                  Official Registry · Founded 2025
-                </span>
-              </div>
+          <div className="lg:pl-20">
+            <p className="text-white/40 text-lg font-light leading-relaxed mb-10">
+              Join 3,000+ verified entities. UpForge is the definitive system of record 
+              for the most ambitious startups in the Indian sub-continent.
+            </p>
+            <Link href="/sponsor">
+              <Button className="h-16 px-12 bg-white text-[#0F172A] hover:bg-[#C6A43F] hover:text-white transition-all rounded-none text-[10px] font-bold uppercase tracking-[0.3em]">
+                Request Feature Access <ArrowRight className="ml-3 h-4 w-4" />
+              </Button>
             </Link>
-
-            <p className="text-sm text-zinc-500 leading-relaxed font-light">
-              UpForge is India’s independent startup registry platform delivering structured visibility,
-              verified identity, and institutional-grade credibility to emerging ventures.
-            </p>
-
-            <div className="flex items-center gap-6 pt-2">
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Verification</span>
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                  <span className="text-xs text-zinc-300 font-medium">L3 Secured</span>
-                </div>
-              </div>
-
-              <div className="w-[1px] h-8 bg-white/10" />
-
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Network</span>
-                <div className="flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-gold" />
-                  <span className="text-xs text-zinc-300 font-medium">India Focused</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* LINKS */}
-          <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-12">
-            {Object.entries(footerLinks).map(([section, links]) => (
-              <div key={section} className="space-y-8">
-                <h4 className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">
-                  {section}
-                </h4>
-                <ul className="space-y-5">
-                  {links.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-zinc-500 hover:text-white hover:pl-2 transition-all duration-300 font-medium inline-block"
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+        {/* LINK GRID: System Index Style */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-32 pt-20 border-t border-white/5">
+          <div className="col-span-2 md:col-span-1 space-y-8">
+             <div className="flex items-center gap-4">
+               <div className="h-10 w-10 bg-white p-1">
+                 <Image src="/logo.jpg" alt="Logo" width={40} height={40} className="grayscale" />
+               </div>
+               <span className="text-xl font-bold tracking-tighter uppercase">UPFORGE</span>
+             </div>
+             <p className="text-[11px] text-white/30 uppercase tracking-widest leading-loose">
+               India's Independent Founder Registry. <br />
+               Secure. Verified. Permanent.
+             </p>
+          </div>
+          
+          {sections.map((section) => (
+            <div key={section.title} className="space-y-8">
+              <h4 className="text-[10px] uppercase tracking-[0.4em] text-[#C6A43F] font-bold">
+                {section.title}
+              </h4>
+              <ul className="space-y-4">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-xs text-white/40 hover:text-[#C6A43F] transition-colors font-medium">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
 
-          <div className="space-y-2">
-            <p className="text-[10px] uppercase tracking-[0.5em] text-zinc-600 font-bold">
-              © {currentYear} UpForge Registry Intelligence Group · India
-            </p>
-            <div className="flex items-center justify-center md:justify-start gap-4 text-[9px] text-zinc-700 tracking-widest font-mono">
-              <span>REF: 2026-UF-HQ</span>
-              <span>LOC: 28.6139° N, 77.2090° E</span>
+        {/* BOTTOM BAR: The Ledger Footer */}
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-12 pt-12 border-t border-white/5">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 border border-white/10 px-4 py-2 bg-white/5">
+              <Fingerprint className="h-3 w-3 text-[#C6A43F]" />
+              <span className="text-[9px] font-mono text-white/40">AUTH_SIG: VERIFIED_2026</span>
+            </div>
+            <div className="hidden md:flex items-center gap-3 border border-white/10 px-4 py-2 bg-white/5">
+              <ShieldCheck className="h-3 w-3 text-[#C6A43F]" />
+              <span className="text-[9px] font-mono text-white/40">ENCRYPTION: AES-256</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 border border-white/10 rounded-full px-6 py-3 bg-white/[0.02]">
-            <Fingerprint className="h-4 w-4 text-gold opacity-50" />
-            <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-black">
-              Digital Signature Verified
-            </span>
-            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-          </div>
+          <p className="text-[10px] text-white/20 uppercase tracking-[0.5em] font-bold">
+            © {currentYear} UPFORGE REGISTRY INTELLIGENCE · ALL RIGHTS RESERVED
+          </p>
 
-          <div className="flex gap-6">
-            <a href="#" className="text-zinc-500 hover:text-gold transition-colors">
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <a href="#" className="text-zinc-500 hover:text-gold transition-colors">
-              <Instagram className="h-5 w-5" />
-            </a>
-            <a href="#" className="text-zinc-500 hover:text-gold transition-colors text-xs font-bold pt-1">
-              𝕏
-            </a>
+          <div className="flex gap-8 text-[10px] font-bold tracking-widest text-white/40">
+             <a href="#" className="hover:text-white transition-colors">LINKEDIN</a>
+             <a href="#" className="hover:text-white transition-colors">TWITTER / X</a>
+             <a href="#" className="hover:text-white transition-colors">INSTAGRAM</a>
           </div>
         </div>
 
