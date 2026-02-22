@@ -2,8 +2,8 @@ import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { 
-  ArrowRight, Crown, Sparkles, 
-  ArrowUpRight, Quote, ExternalLink
+  ArrowRight, Crown, Search, 
+  ArrowUpRight, Quote, ExternalLink, Sparkles
 } from "lucide-react"
 import { Metadata } from "next"
 
@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 export default async function Home() {
   const supabase = await createClient()
 
-  // Sponsor of the Week
   const { data: sponsorOfWeek } = await supabase
     .from("startups")
     .select("*")
@@ -23,132 +22,104 @@ export default async function Home() {
     .order("created_at", { ascending: false })
     .limit(1)
 
-  // Recent Registry Additions
   const { data: startups } = await supabase
     .from("startups")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(6)
+    .limit(8)
 
   return (
-    <div className="bg-white text-black selection:bg-black selection:text-white">
-      {/* ================= HERO SECTION ================= */}
-      <section className="relative pt-40 pb-24 md:pt-56 md:pb-40 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-12 items-end">
-            <div className="flex-1">
-              <div className="flex items-center gap-4 mb-10">
-                <span className="h-px w-12 bg-black"></span>
-                <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40">
-                  EST. 2026 — INDIA'S FOUNDER REGISTRY
-                </span>
-              </div>
-              <h1 className="text-7xl md:text-[110px] leading-[0.85] font-display font-bold tracking-tighter mb-10">
-                Showcase Your <br />
-                <span className="text-gray-300 italic font-medium">Innovation.</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-400 max-w-xl leading-tight mb-12">
-                UpForge is the premier directory for India's verified startups. 
-                Build authority and get discovered by serious builders.
-              </p>
-              <div className="flex flex-wrap gap-6">
-                <Link href="/apply">
-                  <Button className="rounded-full px-12 h-14 bg-black text-white hover:bg-gray-900 text-[11px] font-bold uppercase tracking-widest transition-transform active:scale-95">
-                    Join the Registry
-                  </Button>
-                </Link>
-              </div>
+    <div className="bg-[#ffffff] text-black selection:bg-black selection:text-white overflow-x-hidden">
+      
+      {/* ================= HERO SECTION (WITH FLOATING CHARACTERS) ================= */}
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+        {/* Placeholder for Floating Characters (As seen in the design) */}
+        <div className="absolute top-20 left-[10%] w-32 h-32 bg-gray-100 rounded-full animate-subtle-float opacity-20 hidden lg:block"></div>
+        <div className="absolute bottom-40 right-[15%] w-48 h-48 bg-gray-100 rounded-2xl rotate-12 animate-subtle-float opacity-20 hidden lg:block" style={{ animationDelay: '2s' }}></div>
+        
+        <div className="max-w-5xl mx-auto text-center z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-black/5 bg-gray-50 mb-10">
+            <Sparkles className="h-3 w-3 text-black" />
+            <span className="text-[10px] font-bold tracking-[0.3em] uppercase">The 2026 Founder Registry</span>
+          </div>
+          
+          <h1 className="text-7xl md:text-[140px] leading-[0.8] font-display font-bold tracking-tighter mb-12">
+            Build. <br />
+            <span className="text-gray-200">Verify.</span> <br />
+            Forge.
+          </h1>
+
+          <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-tight mb-16">
+            The definitive ecosystem for India's rising startups. 
+            Join 3,400+ verified builders today.
+          </p>
+
+          {/* PREMIUM SEARCH FEATURE (Centered & Minimal) */}
+          <div className="relative max-w-2xl mx-auto group">
+            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400 group-focus-within:text-black transition-colors" />
             </div>
-            {/* Minimal Stats */}
-            <div className="hidden lg:block border-l border-black/5 pl-12 pb-4">
-              <div className="space-y-8">
-                <div>
-                  <span className="text-4xl font-display font-bold">3,400+</span>
-                  <p className="text-[10px] font-bold tracking-widest uppercase opacity-30">Verified Startups</p>
-                </div>
-                <div>
-                  <span className="text-4xl font-display font-bold">12K+</span>
-                  <p className="text-[10px] font-bold tracking-widest uppercase opacity-30">Monthly Visitors</p>
-                </div>
-              </div>
+            <input 
+              type="text" 
+              placeholder="Search for startups, industries, or founders..." 
+              className="w-full h-20 pl-16 pr-8 rounded-full border border-black/10 bg-gray-50/50 text-lg focus:outline-none focus:ring-4 focus:ring-black/5 focus:bg-white transition-all shadow-sm"
+            />
+            <div className="absolute right-4 top-4">
+              <Button className="rounded-full h-12 px-8 bg-black text-white text-xs font-bold uppercase tracking-widest">
+                Search
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ================= THE REGISTRY: INTERACTIVE ROWS ================= */}
-      <section className="py-24 px-6 border-t border-black/5">
+      {/* ================= INTERACTIVE REGISTRY ROWS (PREVIEW ON HOVER) ================= */}
+      <section className="py-32 px-6 border-t border-black/5 bg-[#fafafa]">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-20">
-            <h2 className="text-4xl font-display font-bold tracking-tighter mb-2">The Registry</h2>
-            <p className="text-gray-400">Hover to preview the ecosystem.</p>
+          <div className="flex justify-between items-end mb-24">
+            <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter">Selected <br/> Registry</h2>
+            <div className="text-right">
+              <p className="text-gray-400 text-sm mb-2">Verified Members</p>
+              <span className="text-4xl font-display font-bold">0{startups?.length || 0}</span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1">
-            {startups?.map((startup) => (
-              <div key={startup.id} className="group relative border-b border-black/5 py-12 transition-all duration-500">
-                <div className="flex flex-col md:flex-row md:items-center justify-between z-10 relative">
-                  <div className="flex items-center gap-8">
-                    <span className="text-[11px] font-mono opacity-20">/ 0{startups.indexOf(startup) + 1}</span>
-                    <h3 className="text-4xl md:text-6xl font-display font-bold tracking-tighter group-hover:italic transition-all group-hover:translate-x-4">
+          <div className="space-y-0">
+            {startups?.map((startup, i) => (
+              <div key={startup.id} className="group relative py-12 border-b border-black/10 transition-all duration-700 hover:px-8 hover:bg-white hover:rounded-3xl hover:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.05)] cursor-pointer">
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="flex items-center gap-12">
+                    <span className="text-xs font-mono opacity-20">0{i + 1}</span>
+                    <h3 className="text-4xl md:text-7xl font-display font-bold tracking-tighter group-hover:scale-[1.02] transition-transform duration-500">
                       {startup.name}
                     </h3>
                   </div>
-                  
-                  <div className="mt-6 md:mt-0 flex items-center gap-6">
-                    <span className="text-xs uppercase tracking-widest opacity-40 group-hover:opacity-100">{startup.industry || "Technology"}</span>
-                    <ArrowUpRight className="h-6 w-6 opacity-20 group-hover:opacity-100 group-hover:rotate-45 transition-all" />
+                  <div className="flex items-center gap-8">
+                    <span className="hidden md:block text-[10px] font-bold uppercase tracking-[0.2em] opacity-30">{startup.industry || "Ecosystem"}</span>
+                    <div className="h-14 w-14 rounded-full border border-black/5 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+                      <ArrowUpRight className="h-6 w-6" />
+                    </div>
                   </div>
                 </div>
 
-                {/* HIDDEN PREVIEW IMAGE (Visibile on hover) */}
-                <div className="absolute right-[10%] top-1/2 -translate-y-1/2 w-[350px] h-[220px] rounded-2xl overflow-hidden shadow-2xl opacity-0 scale-90 translate-x-10 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-500 z-20 hidden lg:block bg-gray-100">
-                   {/* Background Image of Startup Website */}
-                   <img 
-                    src={startup.logo_url || "/placeholder.jpg"} 
-                    alt={startup.name}
-                    className="w-full h-full object-cover blur-[2px] opacity-40"
-                   />
-                   {/* Visit Site Button Overlay */}
-                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm pointer-events-auto">
+                {/* THE "VISIT SITE" PREVIEW CARD (Visible on hover) */}
+                <div className="absolute right-[15%] top-1/2 -translate-y-1/2 w-[400px] h-[260px] opacity-0 scale-90 translate-x-12 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-700 z-50 hidden lg:block">
+                  <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.15)] bg-white border border-black/5">
+                    <img 
+                      src={startup.logo_url || "/placeholder.jpg"} 
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000"
+                      alt={startup.name}
+                    />
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4">
+                      <p className="text-white text-[10px] font-bold tracking-[0.3em] uppercase opacity-70">Live Experience</p>
                       <Link 
                         href={startup.website_url || "#"} 
                         target="_blank"
-                        className="bg-white text-black px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-gray-200 transition-colors"
+                        className="bg-white text-black px-8 py-4 rounded-full text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 pointer-events-auto hover:scale-105 transition-transform"
                       >
-                        Visit Full Site <ExternalLink className="h-3 w-3" />
+                        Visit Website <ExternalLink className="h-3 w-3" />
                       </Link>
-                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= TESTIMONIALS: WHAT FOUNDERS SAY ================= */}
-      <section className="py-32 px-6 bg-[#0a0a0a] text-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter">
-              What <span className="text-gray-500">Founders</span> <br /> Say About Us.
-            </h2>
-            <Quote className="h-20 w-20 text-gray-800 hidden md:block" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {[
-              { name: "Lucky Tiwari", role: "CEO, InternAdda", text: "UpForge helped us gain the verification we needed to build trust with our users." },
-              { name: "Sumit Pandey", role: "Founder, Branded Base", text: "The network of ambitious builders here is unmatched in India's startup scene." },
-              { name: "Aman Ghiya", role: "Founder", text: "Listing our startup was the best decision for our authority and SEO growth." }
-            ].map((test, i) => (
-              <div key={i} className="space-y-8 p-8 border border-white/10 rounded-3xl hover:bg-white hover:text-black transition-all duration-500 group">
-                <p className="text-xl leading-snug italic group-hover:text-black transition-colors">"{test.text}"</p>
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-full bg-gray-800 group-hover:bg-gray-200 transition-colors"></div>
-                  <div>
-                    <h4 className="font-bold text-sm uppercase tracking-widest">{test.name}</h4>
-                    <p className="text-[10px] uppercase opacity-40">{test.role}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -157,11 +128,56 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ================= FOOTER MINI ================= */}
-      <footer className="py-20 px-6 text-center bg-white">
-        <p className="text-[10px] font-bold tracking-[0.5em] uppercase opacity-20">
-          UpForge · Built for Founders · 2026
-        </p>
+      {/* ================= TESTIMONIALS (FOUNDER QUOTES) ================= */}
+      <section className="py-40 px-6 bg-black text-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
+            <div>
+              <h2 className="text-6xl md:text-8xl font-display font-bold tracking-tighter mb-12">
+                The Founder <br /> <span className="text-gray-600 italic font-medium">Perspective.</span>
+              </h2>
+              <div className="h-px w-full bg-white/10 mb-12"></div>
+              <p className="text-xl text-gray-400 max-w-md leading-tight">
+                Join a league of innovators who are redefining the Indian startup landscape.
+              </p>
+            </div>
+            
+            <div className="space-y-16">
+              {[
+                { name: "Lucky Tiwari", role: "InternAdda", quote: "UpForge isn't just a directory; it's a mark of credibility for the modern founder." },
+                { name: "Sumit Pandey", role: "Branded Base", quote: "The networking potential and visibility we gained here was a complete game changer." }
+              ].map((t, idx) => (
+                <div key={idx} className="relative pl-12">
+                  <Quote className="absolute left-0 top-0 h-8 w-8 text-gray-800" />
+                  <p className="text-3xl font-display leading-tight mb-8">"{t.quote}"</p>
+                  <div>
+                    <h4 className="font-bold text-sm uppercase tracking-widest">{t.name}</h4>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">{t.role}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CTA: FINAL FORGE ================= */}
+      <section className="py-40 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-5xl md:text-[100px] leading-[0.9] font-display font-bold tracking-tighter mb-12">
+            Want to be <br /> <span className="text-gray-300">Listed?</span>
+          </h3>
+          <Link href="/apply">
+            <Button className="rounded-full px-20 h-24 bg-black text-white text-sm font-bold uppercase tracking-[0.2em] hover:scale-105 transition-transform">
+              Join the Network
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="py-12 border-t border-black/5 text-center">
+        <p className="text-[10px] font-bold tracking-[0.5em] uppercase opacity-20">UpForge · 2026</p>
       </footer>
     </div>
   )
