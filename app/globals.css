@@ -4,64 +4,18 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Premium Light Theme - Refined Palette */
   --background: #ffffff;
-  --foreground: #0a0a0a;
-  
-  --card: #ffffff;
-  --card-foreground: #0a0a0a;
-  
-  --primary: #0a0a0a; /* Deep black for primary elements */
-  --primary-foreground: #ffffff;
-  
-  --secondary: #64748b; /* Sophisticated slate */
-  --secondary-foreground: #ffffff;
-  
-  --muted: #f8fafc;
-  --muted-foreground: #64748b;
-  
-  --accent: #f1f5f9;
-  --accent-foreground: #0a0a0a;
-  
-  --border: #e2e8f0;
-  
-  --radius: 0.75rem;
+  --foreground: #000000;
+  --border: #e5e5e5; /* Light gray for borders, matches border-black/5 utility */
+  --radius: 0rem;     /* Sharp corners by default, override with rounded-* classes */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), "Bricolage Grotesque", sans-serif;
-  
-  --animate-fade-in: fadeIn 0.8s ease-out;
-  --animate-slide-up: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-subtle-float: subtleFloat 10s ease-in-out infinite;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes subtleFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-display), var(--font-sans);
 }
 
 @layer base {
@@ -69,19 +23,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased font-sans tracking-tight;
+    @apply bg-background text-foreground antialiased;
   }
   h1, h2, h3, h4 {
-    @apply font-display font-semibold tracking-tighter;
-  }
-}
-
-@layer components {
-  .glass-morphism {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm;
-  }
-  
-  .premium-button {
-    @apply transition-all duration-300 active:scale-95 hover:opacity-90;
+    @apply font-display font-bold tracking-tight;
   }
 }
