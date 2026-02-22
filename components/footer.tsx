@@ -1,9 +1,10 @@
+// components/footer.tsx
 "use client"
 
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, ShieldCheck, Globe, Fingerprint, Lock } from "lucide-react"
+import { ArrowRight, ShieldCheck, Fingerprint, Lock } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -37,16 +38,11 @@ export function Footer() {
 
   return (
     <footer className="bg-[#0F172A] text-white pt-32 pb-16 relative overflow-hidden">
-      
-      {/* BACKGROUND DEPTH */}
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#C6A43F] to-transparent" />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-      </div>
+      {/* Animated line */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#C6A43F] to-transparent animate-slide" />
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        
-        {/* TOP CALL TO ACTION: The Invitation */}
+        {/* Top CTA */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
           <div className="space-y-8">
             <div className="inline-flex items-center gap-3 px-4 py-2 border border-[#C6A43F]/30 bg-[#C6A43F]/5">
@@ -56,13 +52,13 @@ export function Footer() {
               </span>
             </div>
             <h3 className="text-5xl md:text-6xl font-display font-light leading-tight">
-              Establishing the <br /> 
+              Establishing the <br />
               <span className="italic font-serif text-[#C6A43F]">Legacy of Builders.</span>
             </h3>
           </div>
           <div className="lg:pl-20">
             <p className="text-white/40 text-lg font-light leading-relaxed mb-10">
-              Join 3,000+ verified entities. UpForge is the definitive system of record 
+              Join 3,000+ verified entities. UpForge is the definitive system of record
               for the most ambitious startups in the Indian sub-continent.
             </p>
             <Link href="/sponsor">
@@ -73,21 +69,21 @@ export function Footer() {
           </div>
         </div>
 
-        {/* LINK GRID: System Index Style */}
+        {/* Link Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-32 pt-20 border-t border-white/5">
           <div className="col-span-2 md:col-span-1 space-y-8">
-             <div className="flex items-center gap-4">
-               <div className="h-10 w-10 bg-white p-1">
-                 <Image src="/logo.jpg" alt="Logo" width={40} height={40} className="grayscale" />
-               </div>
-               <span className="text-xl font-bold tracking-tighter uppercase">UPFORGE</span>
-             </div>
-             <p className="text-[11px] text-white/30 uppercase tracking-widest leading-loose">
-               India's Independent Founder Registry. <br />
-               Secure. Verified. Permanent.
-             </p>
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 bg-white p-1">
+                <Image src="/logo.jpg" alt="Logo" width={40} height={40} className="grayscale" />
+              </div>
+              <span className="text-xl font-bold tracking-tighter uppercase">UPFORGE</span>
+            </div>
+            <p className="text-[11px] text-white/30 uppercase tracking-widest leading-loose">
+              India's Independent Founder Registry. <br />
+              Secure. Verified. Permanent.
+            </p>
           </div>
-          
+
           {sections.map((section) => (
             <div key={section.title} className="space-y-8">
               <h4 className="text-[10px] uppercase tracking-[0.4em] text-[#C6A43F] font-bold">
@@ -106,7 +102,7 @@ export function Footer() {
           ))}
         </div>
 
-        {/* BOTTOM BAR: The Ledger Footer */}
+        {/* Bottom Bar */}
         <div className="flex flex-col lg:flex-row justify-between items-center gap-12 pt-12 border-t border-white/5">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 border border-white/10 px-4 py-2 bg-white/5">
@@ -124,12 +120,11 @@ export function Footer() {
           </p>
 
           <div className="flex gap-8 text-[10px] font-bold tracking-widest text-white/40">
-             <a href="#" className="hover:text-white transition-colors">LINKEDIN</a>
-             <a href="#" className="hover:text-white transition-colors">TWITTER / X</a>
-             <a href="#" className="hover:text-white transition-colors">INSTAGRAM</a>
+            <a href="#" className="hover:text-white transition-colors">LINKEDIN</a>
+            <a href="#" className="hover:text-white transition-colors">TWITTER / X</a>
+            <a href="#" className="hover:text-white transition-colors">INSTAGRAM</a>
           </div>
         </div>
-
       </div>
     </footer>
   )
